@@ -2,6 +2,7 @@
 
 #include<list>
 #include<map>
+#include<exception>
 
 #include"node.hpp"
 #include"wire.hpp"
@@ -11,6 +12,16 @@ template <typename T>
 class Net
 {
 public:
+	
+	class BuildException : public std::exception
+	{
+	public:
+		const char *what() const noexcept override
+		{
+			return "Net build exception";
+		}
+	};
+	
 	virtual ~Net()
 	{
 		
@@ -19,7 +30,7 @@ public:
 	virtual std::list<WireInput<T>*> getInputs() = 0;
 	virtual std::list<WireOutput<T>*> getOutputs() = 0;
 	
-	virtual void setImage(const NetImage<T> &image) = 0;
+	virtual void setImage(const NetImage<T> &image) throw(BuildException) = 0;
 	virtual NetImage<T> getImage() const = 0;
 };
 
@@ -118,7 +129,7 @@ public:
 		}
 	}
 	
-	void setImage(const NetImage<T> &image) override
+	void setImage(const NetImage<T> &image) throw(typename Net<T>::BuildException) override
 	{
 		clear();
 		
@@ -155,15 +166,15 @@ public:
 				if(node_iter != node_map.end())
 				{
 					CapableWire<T> *wire = new CapableWire<T>();
-					node->addInput(wire,nii.factor);
-					node_iter->second->addOutput(wire);
+					node->inputs().add(wire,nii.factor);
+					node_iter->second->outputs().add(wire);
 					wires.push_back(wire);
 					continue;
 				}
 				auto input_iter = input_map.find(nii.id);
 				if(input_iter != input_map.end())
 				{
-					node->addInput(input_iter->second,nii.factor);
+					node->inputs().add(input_iter->second,nii.factor);
 					continue;
 				}
 				/* Need to say about error here */
@@ -173,7 +184,7 @@ public:
 				auto output_iter = output_map.find(nio.id);
 				if(output_iter != output_map.end())
 				{
-					node->addOutput(output_iter->second);
+					node->outputs().add(output_iter->second);
 					continue;
 				}
 			}
