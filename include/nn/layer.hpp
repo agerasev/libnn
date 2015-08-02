@@ -21,56 +21,18 @@ protected:
 	virtual void _update() = 0;
 	
 public:
-	Layer(ID id, int size)
-	  : _id(id), _size(size)
-	{
-		
-	}
-	
+	Layer(ID id, int size);
 	virtual ~Layer() = default;
 	
-	ID getID()
-	{
-		return _id;
-	}
+	ID getID();
+	int getSize() const;
 	
-	int getSize() const
-	{
-		return _size;
-	}
+	bool isValid() const;
+	void setValidity(bool v);
 	
-	bool isValid() const
-	{
-		return _current_valid;
-	}
-	
-	void setValidity(bool v)
-	{
-		_next_valid = v;
-	}
-	
-	void write(const float *data)
-	{
-		_write(data);
-		setValidity(true);
-	}
-
-	void read(float *data) const
-	{
-		_read(data);
-	}
-	
-	void clear()
-	{
-		_clear();
-		setValidity(false);
-	}
-	
-	void update()
-	{
-		_update();
-		_current_valid = _next_valid;
-		_next_valid = false;
-	}
+	void write(const float *data);
+	void read(float *data) const;
+	void clear();
+	void update();
 };
 }

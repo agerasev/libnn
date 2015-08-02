@@ -11,22 +11,10 @@ private:
 	std::string _message;
 	
 public:
-	Exception(const std::string &message)
-	  : _message(message)
-	{
-		
-	}
-	
+	Exception(const std::string &message);
 	virtual ~Exception() = default;
 	
-	const char *what() const noexcept
-	{
-		return _message.data();
-	}
-	
-	const std::string &getMessage() const
-	{
-		return _message;
-	}
+	virtual const char *what() const noexcept override;
+	const std::string &getMessage() const;
 };
 }
