@@ -1,10 +1,6 @@
 #pragma once
 
-#include <cl/kernel.hpp>
-#include <cl/buffer_object.hpp>
-
 #include <nn/connection.hpp>
-
 #include <nn/software/layer.hpp>
 
 namespace nn

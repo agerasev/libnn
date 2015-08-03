@@ -18,6 +18,16 @@ float *nn::sw::Layer::getInputBuffer()
 	return _input_buffer;
 }
 
+const float *nn::sw::Layer::getInputBuffer() const
+{
+	return _input_buffer;
+}
+
+float *nn::sw::Layer::getOutputBuffer()
+{
+	return _output_buffer;
+}
+
 const float *nn::sw::Layer::getOutputBuffer() const
 {
 	return _output_buffer;

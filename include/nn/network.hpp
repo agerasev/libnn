@@ -29,6 +29,6 @@ public:
 	void forConnections(std::function<void(Connection *)> func);
 	void forConnections(std::function<void(Connection *, Layer *, Layer *)> func);
 	
-	void stepForward();
+	virtual void stepForward();
 };
 }

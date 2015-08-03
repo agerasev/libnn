@@ -31,4 +31,18 @@ public:
 	
 	virtual void feedforward(const Layer *from, Layer *to) const;
 };
+
+template <typename Plugin>
+class ConnectionX : public Connection, public Plugin
+{
+public:
+	template <typename ... Args>
+	ConnectionX(ID id, int input_size, int output_size, Args ... args)
+	    : Connection(id, input_size, output_size), Plugin(args ...)
+	{
+		
+	}
+	
+	virtual ~ConnectionX() = default;
+};
 }

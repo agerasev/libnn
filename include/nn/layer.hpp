@@ -35,4 +35,19 @@ public:
 	void clear();
 	void update();
 };
+
+template <class Plugin>
+class LayerX : public Layer, public Plugin
+{
+public:
+	template <typename ... Args>
+	LayerX(ID id, int size, Args ... args)
+	    : Layer(id, size), Plugin(args ...)
+	{
+		
+	}
+	
+	virtual ~LayerX() = default;
+};
+
 }

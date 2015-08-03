@@ -17,6 +17,8 @@ public:
 	virtual ~Layer();
 	
 	float *getInputBuffer();
+	const float *getInputBuffer() const;
+	float *getOutputBuffer();
 	const float *getOutputBuffer() const;
 	
 protected:

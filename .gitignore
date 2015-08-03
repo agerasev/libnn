@@ -1,2 +1,4 @@
 *~
-unittest
+CMakeFiles
+*.cmake
+Makefile
