@@ -1,28 +1,28 @@
 #include <nn/exception.hpp>
-#include <nn/connection.hpp>
+#include <nn/conn.hpp>
 
-nn::Connection::Connection(ID id, int input_size, int output_size)
+Conn::Conn(ID id, int input_size, int output_size)
 	: _id(id), _in_size(input_size), _out_size(output_size)
 {
 	
 }
 
-nn::Connection::ID nn::Connection::getID() const
+Conn::ID Conn::getID() const
 {
 	return _id;
 }
 
-int nn::Connection::getInputSize() const
+int Conn::getInputSize() const
 {
 	return _in_size;
 }
 
-int nn::Connection::getOutputSize() const
+int Conn::getOutputSize() const
 {
 	return _out_size;
 }
 
-void nn::Connection::feedforward(const Layer *from, Layer *to) const
+void Conn::transmit(const Layer *from, Layer *to) const
 {
 	if(from->getSize() != getInputSize())
 		throw Exception("input buffer and connection sizes do not match");
@@ -30,10 +30,10 @@ void nn::Connection::feedforward(const Layer *from, Layer *to) const
 	if(to->getSize() != getOutputSize())
 		throw Exception("output buffer and connection sizes do not match");
 	
-	if(from->isValid())
+	if(!from->isZero())
 	{
-		_feedforward(from, to);
-		to->setValidity(true);
+		_transmit(from, to);
+		to->setZero(false);
 	}
 }
 

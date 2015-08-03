@@ -1,28 +1,28 @@
 cmake_minimum_required(VERSION 2.6)
 project(libnn)
 
-include_directories(libcl4u include)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall")
+include_directories(include libcl4u/include)
 
 set(SOURCE 
 	source/layer.cpp 
-	source/connection.cpp 
-	source/network.cpp
+	source/conn.cpp 
+	source/net.cpp
 	source/exception.cpp
-	source/software/layer.cpp
-	source/software/connection.cpp
-	source/software/sigmoidlayer.cpp
+	source/sw/layer.cpp
+	source/sw/conn.cpp
+	source/sw/sigmoidlayer.cpp
 )
 
-find_package(OpenCL)
-if(OPENCL_FOUND)
+if(OPENCL)
 set(SOURCE
 	${SOURCE}
-	source/opencl/layer.cpp
-	source/opencl/connection.cpp
-	source/opencl/factory.cpp
+	source/hw/layer.cpp
+	source/hw/conn.cpp
+	source/hw/factory.cpp
 )
-endif(OPENCL_FOUND)
+endif(OPENCL)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
+
+add_subdirectory(libcl4u)
+target_link_libraries(${PROJECT_NAME} libcl4u)

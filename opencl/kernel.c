@@ -2,7 +2,7 @@
 #include "opencl.h"
 #endif // __OPENCL_VERSION__
 
-kernel void full_product(
+kernel void transmit(
     const uint in_size, const uint out_size, 
     global const float *input, global float *output,
     global const float *weight, global const float *bias

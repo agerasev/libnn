@@ -3,8 +3,6 @@
 #include <exception>
 #include <string>
 
-namespace nn
-{
 class Exception : public std::exception
 {
 private:
@@ -17,4 +15,3 @@ public:
 	virtual const char *what() const noexcept override;
 	const std::string &getMessage() const;
 };
-}

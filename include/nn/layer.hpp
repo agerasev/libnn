@@ -1,7 +1,5 @@
 #pragma once
 
-namespace nn
-{
 class Layer
 {
 public:
@@ -11,8 +9,8 @@ private:
 	ID _id;
 	int _size;
 	
-	bool _current_valid = false;
-	bool _next_valid = false;
+	bool _zero_in = true;
+	bool _zero_out = true;
 	
 protected:
 	virtual void _write(const float *data) = 0;
@@ -27,27 +25,11 @@ public:
 	ID getID();
 	int getSize() const;
 	
-	bool isValid() const;
-	void setValidity(bool v);
+	bool isZero() const;
+	void setZero(bool v);
 	
 	void write(const float *data);
 	void read(float *data) const;
 	void clear();
 	void update();
 };
-
-template <class Plugin>
-class LayerX : public Layer, public Plugin
-{
-public:
-	template <typename ... Args>
-	LayerX(ID id, int size, Args ... args)
-	    : Layer(id, size), Plugin(args ...)
-	{
-		
-	}
-	
-	virtual ~LayerX() = default;
-};
-
-}

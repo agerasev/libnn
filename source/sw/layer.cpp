@@ -1,39 +1,39 @@
-#include <nn/software/layer.hpp>
+#include <nn/sw/layer.hpp>
 
-nn::sw::Layer::Layer(ID id, int size)
-	: nn::Layer(id, size)
+LayerSW::LayerSW(ID id, int size)
+	: Layer(id, size)
 {
 	_input_buffer = new float[size];
 	_output_buffer = new float[size];
 }
 
-nn::sw::Layer::~Layer()
+LayerSW::~LayerSW()
 {
 	delete[] _input_buffer;
 	delete[] _output_buffer;
 }
 
-float *nn::sw::Layer::getInputBuffer()
+float *LayerSW::getInput()
 {
 	return _input_buffer;
 }
 
-const float *nn::sw::Layer::getInputBuffer() const
+const float *LayerSW::getInput() const
 {
 	return _input_buffer;
 }
 
-float *nn::sw::Layer::getOutputBuffer()
+float *LayerSW::getOutput()
 {
 	return _output_buffer;
 }
 
-const float *nn::sw::Layer::getOutputBuffer() const
+const float *LayerSW::getOutput() const
 {
 	return _output_buffer;
 }
 
-void nn::sw::Layer::_write(const float *data)
+void LayerSW::_write(const float *data)
 {
 	for(int i = 0; i < getSize(); ++i)
 	{
@@ -41,7 +41,7 @@ void nn::sw::Layer::_write(const float *data)
 	}
 }
 
-void nn::sw::Layer::_read(float *data) const
+void LayerSW::_read(float *data) const
 {
 	for(int i = 0; i < getSize(); ++i)
 	{
@@ -49,7 +49,7 @@ void nn::sw::Layer::_read(float *data) const
 	}
 }
 
-void nn::sw::Layer::_clear()
+void LayerSW::_clear()
 {
 	for(int i = 0; i < getSize(); ++i)
 	{
@@ -57,7 +57,7 @@ void nn::sw::Layer::_clear()
 	}
 }
 
-void nn::sw::Layer::_update()
+void LayerSW::_update()
 {
 	float *temp_buffer = _input_buffer;
 	_input_buffer = _output_buffer;
