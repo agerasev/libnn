@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nn/learn/bp/layer.hpp>
+#include <nn/learn/layerplugin.hpp>
 
 namespace nn
 {
@@ -12,7 +12,7 @@ public:
 	ConnectionPlugin() = default;
 	virtual ~ConnectionPlugin() = default;
 	
-	virtual void backpropagate(nn::LayerX<LayerPlugin> *to, const nn::LayerX<LayerPlugin> *from) = 0;
+	virtual void backpropagate(nn::Layer *to, const nn::Layer *from) = 0;
 	virtual void addGradient() = 0;
 	virtual void clearCradient() = 0;
 };

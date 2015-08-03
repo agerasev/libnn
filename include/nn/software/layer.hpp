@@ -6,6 +6,7 @@ namespace nn
 {
 namespace sw
 {
+
 class Layer : public nn::Layer
 {
 private:
@@ -27,5 +28,20 @@ protected:
 	virtual void _clear() override;
 	virtual void _update() override;
 };
+
+template <class Plugin>
+class LayerX : public Layer, public Plugin
+{
+public:
+	template <typename ... Args>
+	LayerX(ID id, int size, Args ... args)
+	    : Layer(id, size), Plugin(args ...)
+	{
+		
+	}
+	
+	virtual ~LayerX() = default;
+};
+
 }
 }
