@@ -27,5 +27,8 @@ public:
 	virtual void writeWeight(const float *data) = 0;
 	virtual void writeBias(const float *data) = 0;
 	
+	virtual void randomizeWeight() = 0;
+	virtual void randomizeBias() = 0;
+	
 	virtual void transmit(const Layer *from, Layer *to) const;
 };

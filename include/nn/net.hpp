@@ -8,7 +8,7 @@
 
 class Net
 {
-private:
+protected:
 	std::map<Layer::ID, Layer *> _layers;
 	std::map<Conn::ID, Conn *> _conns;
 	std::map<Conn::ID, std::pair<Layer::ID, Layer::ID>> _struct;
