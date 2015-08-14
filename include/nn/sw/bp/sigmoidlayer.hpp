@@ -11,5 +11,4 @@ public:
 	
 protected:
 	virtual void _updateError() override;
-	// virtual void _updateError_CE(); // For cross-entropy cost function
 };

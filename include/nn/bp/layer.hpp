@@ -13,8 +13,10 @@ public:
 	void updateError();
 	void clearError();
 	
+	virtual float getCost() const = 0;
+	
 protected:
-	virtual void _writeError(const float *data) = 0;
+	virtual void _writeError(const float *sample) = 0;
 	virtual void _readError(float *data) const = 0;
 	virtual void _updateError() = 0;
 	virtual void _clearError() = 0;

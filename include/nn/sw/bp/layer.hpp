@@ -18,8 +18,10 @@ public:
 	float *getOutputError();
 	const float *getOutputError() const;
 	
+	virtual float getCost() const override;
+	
 protected:
-	virtual void _writeError(const float *data) override;
+	virtual void _writeError(const float *sample) override;
 	virtual void _readError(float *data) const override;
 	virtual void _updateError() override;
 	virtual void _clearError() override;

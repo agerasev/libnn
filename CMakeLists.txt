@@ -24,5 +24,7 @@ endif(OPENCL)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
+if(OPENCL)
 add_subdirectory(libcl4u)
 target_link_libraries(${PROJECT_NAME} libcl4u)
+endif(OPENCL)

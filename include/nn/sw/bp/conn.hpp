@@ -16,5 +16,5 @@ public:
 	virtual void addGrad() override;
 	virtual void clearGrad() override;
 	
-	virtual void backprop(Layer *to, const Layer *from) override;
+	virtual void backprop(Layer *to, const Layer *from, float delta) override;
 };

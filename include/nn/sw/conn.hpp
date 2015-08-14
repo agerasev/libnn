@@ -8,10 +8,11 @@ class ConnSW : public virtual Conn
 private:
 	float *_weight_buffer;
 	float *_bias_buffer;
+	
+protected:
 	int _weight_size;
 	int _bias_size;
 	
-protected:
 	ConnSW(ID id, int input_size, int output_size, int weight_size, int bias_size);
 	
 public:

@@ -4,6 +4,9 @@
 
 class Conn_BP : public virtual Conn
 {
+protected:
+	int _bp_count;
+	
 public:
 	Conn_BP() = default;
 	virtual ~Conn_BP() = default;
