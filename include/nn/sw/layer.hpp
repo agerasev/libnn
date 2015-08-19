@@ -1,25 +1,25 @@
 #pragma once
 
 #include <nn/layer.hpp>
+#include <nn/sw/buffer.hpp>
 
 class LayerSW : public virtual Layer
 {
 private:
-	float *_input_buffer;
-	float *_output_buffer;
+	BufferSW _input;
+	BufferSW _output;
 	
+protected:
+	LayerSW();
 public:
 	LayerSW(ID id, int size);
 	virtual ~LayerSW();
 	
-	float *getInput();
-	const float *getInput() const;
-	float *getOutput();
-	const float *getOutput() const;
+	virtual BufferSW &getInput() override;
+	virtual BufferSW &getOutput() override;
+	virtual const BufferSW &getInput() const override;
+	virtual const BufferSW &getOutput() const override;
 	
 protected:
-	virtual void _write(const float *data) override;
-	virtual void _read(float *data) const override;
-	virtual void _clear() override;
 	virtual void _update() override;
 };

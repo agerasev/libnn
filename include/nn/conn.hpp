@@ -22,6 +22,11 @@ public:
 	int getInputSize() const;
 	int getOutputSize() const;
 	
+protected:
+	virtual int getWeightSize() const = 0;
+	virtual int getBiasSize() const = 0;
+	
+public:
 	virtual void readWeight(float *data) const = 0;
 	virtual void readBias(float *data) const = 0;
 	virtual void writeWeight(const float *data) = 0;

@@ -1,65 +1,43 @@
 #include <nn/sw/layer.hpp>
 
-LayerSW::LayerSW(ID id, int size)
-	: Layer(id, size)
+LayerSW::LayerSW() 
+    : LayerSW(getID(), getSize())
 {
-	_input_buffer = new float[size];
-	_output_buffer = new float[size];
+	
+}
+
+LayerSW::LayerSW(ID id, int size)
+	: Layer(id, size), _input(size), _output(size)
+{
+	
 }
 
 LayerSW::~LayerSW()
 {
-	delete[] _input_buffer;
-	delete[] _output_buffer;
+	
 }
 
-float *LayerSW::getInput()
+BufferSW &LayerSW::getInput()
 {
-	return _input_buffer;
+	return _input;
 }
 
-const float *LayerSW::getInput() const
+BufferSW &LayerSW::getOutput()
 {
-	return _input_buffer;
+	return _output;
 }
 
-float *LayerSW::getOutput()
+const BufferSW &LayerSW::getInput() const
 {
-	return _output_buffer;
+	return _input;
 }
 
-const float *LayerSW::getOutput() const
+const BufferSW &LayerSW::getOutput() const
 {
-	return _output_buffer;
-}
-
-void LayerSW::_write(const float *data)
-{
-	for(int i = 0; i < getSize(); ++i)
-	{
-		_input_buffer[i] = data[i];
-	}
-}
-
-void LayerSW::_read(float *data) const
-{
-	for(int i = 0; i < getSize(); ++i)
-	{
-		data[i] = _output_buffer[i];
-	}
-}
-
-void LayerSW::_clear()
-{
-	for(int i = 0; i < getSize(); ++i)
-	{
-		_input_buffer[i] = 0.0f;
-	}
+	return _output;
 }
 
 void LayerSW::_update()
 {
-	float *temp_buffer = _input_buffer;
-	_input_buffer = _output_buffer;
-	_output_buffer = temp_buffer;
+	_output.copy(_input);
 }

@@ -11,6 +11,11 @@ ConnSW::ConnSW(ID id, int input_size, int output_size, int weight_size, int bias
 	_bias_buffer = new float[_bias_size];
 }
 
+ConnSW::ConnSW() : ConnSW(getID(), getInputSize(), getOutputSize())
+{
+	
+}
+
 ConnSW::ConnSW(ID id, int input_size, int output_size)
 	: ConnSW(id, input_size, output_size, input_size*output_size, output_size)
 {
@@ -53,8 +58,8 @@ void ConnSW::_transmit(const Layer *from, Layer *to) const
 	if(sw_to == nullptr)
 		throw Exception("output layer is not derived from LayerSW");
 	
-	const float *input = sw_from->getOutput();
-	float *output = sw_to->getInput();
+	const float *input = sw_from->getOutput().getData();
+	float *output = sw_to->getInput().getData();
 	const int out_size = getOutputSize();
 	const int in_size = getInputSize();
 	
@@ -99,4 +104,14 @@ void ConnSW::writeBias(const float *data)
 	{
 		_bias_buffer[i] = data[i];
 	}
+}
+
+int ConnSW::getWeightSize() const
+{
+	return _weight_size;
+}
+
+int ConnSW::getBiasSize() const
+{
+	return _bias_size;
 }

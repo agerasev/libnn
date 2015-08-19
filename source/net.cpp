@@ -71,7 +71,6 @@ void Net::stepForward()
 	for(std::pair<Layer::ID, Layer *> p : _layers)
 	{
 		p.second->update();
-		p.second->clear();
 	}
 	for(const std::pair<Conn::ID, std::pair<Layer::ID, Layer::ID> > &p : _struct)
 	{

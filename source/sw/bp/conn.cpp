@@ -3,7 +3,7 @@
 #include <nn/exception.hpp>
 
 ConnSW_BP::ConnSW_BP(ID id, int input_size, int output_size)
-    : Conn(id, input_size, output_size), ConnSW(id, input_size, output_size)
+    : Conn(id, input_size, output_size)
 {
 	_weight_grad = new float[_weight_size];
 	_bias_grad = new float[_bias_size];

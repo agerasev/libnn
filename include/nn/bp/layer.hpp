@@ -5,7 +5,7 @@
 class Layer_BP : public virtual Layer
 {
 public:
-	Layer_BP() = default;
+	Layer_BP() : Layer(0,0) {}
 	virtual ~Layer_BP() = default;
 	
 	void writeError(const float *data);

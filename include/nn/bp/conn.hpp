@@ -8,7 +8,7 @@ protected:
 	int _bp_count;
 	
 public:
-	Conn_BP() = default;
+	Conn_BP() : Conn(0,0,0) {}
 	virtual ~Conn_BP() = default;
 	
 	virtual void addGrad() = 0;

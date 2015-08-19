@@ -14,7 +14,7 @@ protected:
 	int _bias_size;
 	
 	ConnSW(ID id, int input_size, int output_size, int weight_size, int bias_size);
-	
+	ConnSW();
 public:
 	ConnSW(ID id, int input_size, int output_size);
 	virtual ~ConnSW();
@@ -30,4 +30,8 @@ public:
 	virtual void readBias(float *data) const override;
 	virtual void writeWeight(const float *data) override;
 	virtual void writeBias(const float *data) override;
+	
+protected:
+	virtual int getWeightSize() const override;
+	virtual int getBiasSize() const override;
 };
