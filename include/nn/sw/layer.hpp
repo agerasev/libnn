@@ -5,6 +5,19 @@
 
 class LayerSW : public virtual Layer
 {
+public:
+	class BufferSW : public virtual ::BufferSW, public virtual Layer::Buffer
+	{
+	protected:
+		BufferSW() : BufferSW(getSize()) {}
+	public:
+		BufferSW(int size) : ::Buffer(size) {}
+		virtual ~BufferSW() = default;
+		
+		virtual void write(const float *data) override;
+		virtual void clear() override;
+	};
+	
 private:
 	BufferSW _input;
 	BufferSW _output;

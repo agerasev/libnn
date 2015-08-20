@@ -3,12 +3,9 @@
 #include <nn/exception.hpp>
 
 ConnSW::ConnSW(ID id, int input_size, int output_size, int weight_size, int bias_size)
-	: Conn(id, input_size, output_size)
+	: Conn(id, input_size, output_size), _weight(weight_size), _bias(bias_size)
 {
-	_weight_size = weight_size;
-	_bias_size = bias_size;
-	_weight_buffer = new float[_weight_size];
-	_bias_buffer = new float[_bias_size];
+	
 }
 
 ConnSW::ConnSW() : ConnSW(getID(), getInputSize(), getOutputSize())
@@ -20,32 +17,6 @@ ConnSW::ConnSW(ID id, int input_size, int output_size)
 	: ConnSW(id, input_size, output_size, input_size*output_size, output_size)
 {
 	
-}
-
-ConnSW::~ConnSW()
-{
-	delete[] _weight_buffer;
-	delete[] _bias_buffer;
-}
-
-float *ConnSW::getWeight()
-{
-	return _weight_buffer;
-}
-
-const float *ConnSW::getWeight() const
-{
-	return _weight_buffer;
-}
-
-float *ConnSW::getBias()
-{
-	return _bias_buffer;
-}
-
-const float *ConnSW::getBias() const
-{
-	return _bias_buffer;
 }
 
 void ConnSW::_transmit(const Layer *from, Layer *to) const
@@ -63,55 +34,34 @@ void ConnSW::_transmit(const Layer *from, Layer *to) const
 	const int out_size = getOutputSize();
 	const int in_size = getInputSize();
 	
+	const float *weight = _weight.getData();
+	const float *bias = _bias.getData();
 	for(int j = 0; j < out_size; ++j)
 	{
 		float sum = 0.0;
 		for(int i = 0; i < in_size; ++i)
 		{
-			sum += input[i]*_weight_buffer[in_size*j + i];
+			sum += input[i]*weight[in_size*j + i];
 		}
-		output[j] += sum + _bias_buffer[j];
+		output[j] += sum + bias[j];
 	}
 }
 
-void ConnSW::readWeight(float *data) const
+ConnSW::BufferSW &ConnSW::getWeight()
 {
-	for(int i = 0; i < _weight_size; ++i)
-	{
-		data[i] = _weight_buffer[i];
-	}
+	return _weight;
 }
 
-void ConnSW::readBias(float *data) const
+ConnSW::BufferSW &ConnSW::getBias()
 {
-	for(int i = 0; i < _bias_size; ++i)
-	{
-		data[i] = _bias_buffer[i];
-	}
+	return _bias;
 }
 
-void ConnSW::writeWeight(const float *data)
+const ConnSW::BufferSW &ConnSW::getWeight() const
 {
-	for(int i = 0; i < _weight_size; ++i)
-	{
-		_weight_buffer[i] = data[i];
-	}
+	return _weight;
 }
-
-void ConnSW::writeBias(const float *data)
+const ConnSW::BufferSW &ConnSW::getBias() const
 {
-	for(int i = 0; i < _bias_size; ++i)
-	{
-		_bias_buffer[i] = data[i];
-	}
-}
-
-int ConnSW::getWeightSize() const
-{
-	return _weight_size;
-}
-
-int ConnSW::getBiasSize() const
-{
-	return _bias_size;
+	return _bias;
 }

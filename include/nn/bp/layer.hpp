@@ -4,20 +4,21 @@
 
 class Layer_BP : public virtual Layer
 {
+protected:
+	Layer_BP() : Layer(getID(), getSize()) {}
 public:
-	Layer_BP() : Layer(0,0) {}
+	Layer_BP(ID id, int size) : Layer(id, size) {}
 	virtual ~Layer_BP() = default;
 	
-	void writeError(const float *data);
-	void readError(float *data) const;
+	virtual Layer::Buffer &getInputError() = 0;
+	virtual Layer::Buffer &getOutputError() = 0;
+	virtual const Layer::Buffer &getInputError() const = 0;
+	virtual const Layer::Buffer &getOutputError() const = 0;
+	
 	void updateError();
-	void clearError();
 	
 	virtual float getCost() const = 0;
 	
 protected:
-	virtual void _writeError(const float *sample) = 0;
-	virtual void _readError(float *data) const = 0;
 	virtual void _updateError() = 0;
-	virtual void _clearError() = 0;
 };

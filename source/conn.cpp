@@ -24,11 +24,11 @@ int Conn::getOutputSize() const
 
 void Conn::transmit(const Layer *from, Layer *to) const
 {
-	if(from->getOutput().getSize() != getInputSize())
-		throw Exception("input buffer and connection sizes do not match");
+	if(from->getSize() != getInputSize())
+		throw Exception("input layer and connection sizes do not match");
 	
-	if(to->getInput().getSize() != getOutputSize())
-		throw Exception("output buffer and connection sizes do not match");
+	if(to->getSize() != getOutputSize())
+		throw Exception("output layer and connection sizes do not match");
 	
 	if(from->getOutput().isValid())
 	{

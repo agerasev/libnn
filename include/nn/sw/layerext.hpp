@@ -14,6 +14,8 @@ public:
 template <>
 class LayerExtSW<EXT_NONE> : public virtual LayerSW, public virtual LayerExt<EXT_NONE>
 {
+protected:
+	LayerExtSW() : LayerExtSW(getID(), getSize()) {}
 public:
 	LayerExtSW(ID id, int size);
 	virtual ~LayerExtSW() = default;
@@ -22,6 +24,8 @@ public:
 template <>
 class LayerExtSW<EXT_SIGMOID> : public virtual LayerSW, public virtual LayerExt<EXT_SIGMOID>
 {
+protected:
+	LayerExtSW() : LayerExtSW(getID(), getSize()) {}
 public:
 	LayerExtSW(ID id, int size);
 	virtual ~LayerExtSW() = default;

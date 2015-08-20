@@ -30,3 +30,23 @@ void Layer::update()
 		getOutput().validate(false);
 	}
 }
+
+void Layer::Buffer::setZero(bool z)
+{
+	_zero = z;
+}
+
+bool Layer::Buffer::isZero() const
+{
+	return _zero;
+}
+
+void Layer::Buffer::validate(bool v)
+{
+	_validity = v;
+}
+
+bool Layer::Buffer::isValid() const
+{
+	return _validity;
+}

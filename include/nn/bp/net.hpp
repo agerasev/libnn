@@ -9,4 +9,5 @@ public:
 	virtual ~Net_BP() = default;
 	
 	virtual void stepBackward();
+	virtual void commitGrad(float delta);
 };

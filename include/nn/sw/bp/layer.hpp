@@ -6,23 +6,22 @@
 class LayerSW_BP : public virtual LayerSW, public virtual Layer_BP
 {
 private:
-	float *_input_error;
-	float *_output_error;
+	LayerSW::BufferSW _input_error;
+	LayerSW::BufferSW _output_error;
 	
+protected:
+	LayerSW_BP() : LayerSW_BP(getID(), getSize()) {}
 public:
 	LayerSW_BP(ID id, int size);
-	virtual ~LayerSW_BP();
+	virtual ~LayerSW_BP() = default;
 	
-	float *getInputError();
-	const float *getInputError() const;
-	float *getOutputError();
-	const float *getOutputError() const;
+	virtual LayerSW::BufferSW &getInputError() override;
+	virtual LayerSW::BufferSW &getOutputError() override;
+	virtual const LayerSW::BufferSW &getInputError() const override;
+	virtual const LayerSW::BufferSW &getOutputError() const override;
 	
 	virtual float getCost() const override;
 	
 protected:
-	virtual void _writeError(const float *sample) override;
-	virtual void _readError(float *data) const override;
 	virtual void _updateError() override;
-	virtual void _clearError() override;
 };

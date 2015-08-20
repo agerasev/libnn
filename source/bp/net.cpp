@@ -11,16 +11,27 @@ void Net_BP::stepBackward()
 		if(ll != nullptr)
 		{
 			ll->updateError();
-			ll->clearError();
 		}
 	}
 	for(std::pair<Conn::ID, Conn *> c : _conns)
 	{
 		Conn_BP *lc = dynamic_cast<Conn_BP *>(c.second);
-		if(c != nullptr)
+		if(lc != nullptr)
 		{
-			std::pair<Layer *, Layer *> p = _struct[lc->getID()];
-			lc->backprop(p.first, p.second);
+			std::pair<Layer::ID, Layer::ID> p = _struct[lc->getID()];
+			lc->backprop(_layers[p.first], _layers[p.second]);
+		}
+	}
+}
+
+void Net_BP::commitGrad(float delta)
+{
+	for(std::pair<Conn::ID, Conn *> c : _conns)
+	{
+		Conn_BP *lc = dynamic_cast<Conn_BP *>(c.second);
+		if(lc != nullptr)
+		{
+			lc->commitGrad(delta);
 		}
 	}
 }

@@ -3,6 +3,8 @@
 #define EXT_NONE       0x0000
 #define EXT_SIGMOID    0x0001
 
+#include <nn/layer.hpp>
+
 template <int X>
 class LayerExt : public virtual Layer
 {

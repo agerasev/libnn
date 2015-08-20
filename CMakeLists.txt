@@ -13,6 +13,12 @@ set(SOURCE
 	source/sw/layer.cpp
 	source/sw/conn.cpp
 	source/sw/layerext.cpp
+	source/bp/conn.cpp
+	source/bp/layer.cpp
+	source/bp/net.cpp
+	source/sw/bp/conn.cpp
+	source/sw/bp/layer.cpp
+	source/sw/bp/layerext.cpp
 )
 
 if(OPENCL)

@@ -2,10 +2,31 @@
 
 #include "buffer.hpp"
 
+// TODO: rename 'output' to 'activation'
+
 class Layer
 {
 public:
 	typedef unsigned ID;
+	
+	class Buffer : public virtual ::Buffer
+	{
+	private:
+		bool _validity = false;
+		bool _zero = false;
+		
+	protected:
+		Buffer() : Buffer(getSize()) {}
+	public:
+		Buffer(int size) : ::Buffer(size) {}
+		virtual ~Buffer() = default;
+		
+		void setZero(bool z);
+		bool isZero() const;
+		
+		void validate(bool v);
+		bool isValid() const;
+	};
 	
 private:
 	ID _id;

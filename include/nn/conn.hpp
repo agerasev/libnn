@@ -1,11 +1,25 @@
 #pragma once
 
-#include "layer.hpp"
+#include <nn/layer.hpp>
+#include <nn/buffer.hpp>
 
 class Conn
 {
 public:
 	typedef unsigned ID;
+	
+	class Buffer : public virtual ::Buffer
+	{
+	private:
+		int _size;
+		
+	protected:
+		Buffer() : Buffer(getSize()) {}
+	public:
+		Buffer(int size) : ::Buffer(size) {}
+		virtual ~Buffer() = default;
+		// virtual void randomize() = 0;
+	};
 	
 private:
 	ID _id;
@@ -22,18 +36,11 @@ public:
 	int getInputSize() const;
 	int getOutputSize() const;
 	
-protected:
-	virtual int getWeightSize() const = 0;
-	virtual int getBiasSize() const = 0;
-	
 public:
-	virtual void readWeight(float *data) const = 0;
-	virtual void readBias(float *data) const = 0;
-	virtual void writeWeight(const float *data) = 0;
-	virtual void writeBias(const float *data) = 0;
-	
-	// virtual void randomizeWeight() = 0;
-	// virtual void randomizeBias() = 0;
+	virtual Buffer &getWeight() = 0;
+	virtual Buffer &getBias() = 0;
+	virtual const Buffer &getWeight() const = 0;
+	virtual const Buffer &getBias() const = 0;
 	
 	virtual void transmit(const Layer *from, Layer *to) const;
 };
