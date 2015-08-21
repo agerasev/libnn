@@ -2,6 +2,8 @@
 
 #include <nn/exception.hpp>
 
+#include <cstdlib>
+
 ConnSW::ConnSW(ID id, int input_size, int output_size, int weight_size, int bias_size)
 	: Conn(id, input_size, output_size), _weight(weight_size), _bias(bias_size)
 {
@@ -64,4 +66,14 @@ const ConnSW::BufferSW &ConnSW::getWeight() const
 const ConnSW::BufferSW &ConnSW::getBias() const
 {
 	return _bias;
+}
+
+void ConnSW::BufferSW::randomize(float range)
+{
+	float *data = getData();
+	const int size = getSize();
+	for(int i = 0; i < size; ++i)
+	{
+		data[i] = 2.0f*range*float(rand())/RAND_MAX - 1.0f;
+	}
 }

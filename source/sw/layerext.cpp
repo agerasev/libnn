@@ -26,7 +26,8 @@ void LayerExtSW<EXT_SIGMOID>::_update()
 		throw Exception("input and output buffers sizes doesn't match");
 	
 	int size = getInput().getSize();
-	float *input = getInput().getData(), *output = getOutput().getData();
+	float const *input = getInput().getData();
+	float *output = getOutput().getData();
 	for(int i = 0; i < size; ++i)
 		output[i] = _sigma(input[i]);
 }

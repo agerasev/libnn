@@ -15,7 +15,7 @@ public:
 		BufferSW(int size) : ::Buffer(size) {}
 		virtual ~BufferSW() = default;
 		
-		// virtual void randomize() override;
+		virtual void randomize(float range = 1.0f) override;
 	};
 		
 private:

@@ -18,7 +18,8 @@ public:
 	public:
 		Buffer(int size) : ::Buffer(size) {}
 		virtual ~Buffer() = default;
-		// virtual void randomize() = 0;
+		
+		virtual void randomize(float range = 1.0f) = 0;
 	};
 	
 private:
