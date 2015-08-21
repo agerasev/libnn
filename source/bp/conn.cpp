@@ -2,7 +2,7 @@
 #include <nn/bp/layer.hpp>
 #include <nn/exception.hpp>
 
-Conn_BP::getBPCount() const
+int Conn_BP::getBPCount() const
 {
 	return _bp_count;
 }
@@ -25,10 +25,10 @@ void Conn_BP::commitGrad(float delta)
 
 void Conn_BP::backprop(Layer *to, const Layer *from)
 {
-	if(from->getSize() != getInputSize())
+	if(from->getSize() != getOutputSize())
 		throw Exception("input layer and connection sizes do not match");
 	
-	if(to->getSize() != getOutputSize())
+	if(to->getSize() != getInputSize())
 		throw Exception("output layer and connection sizes do not match");
 	
 	Layer_BP *to_bp = dynamic_cast<Layer_BP *>(to);

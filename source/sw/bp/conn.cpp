@@ -39,11 +39,11 @@ void ConnSW_BP::_commitGrad(float delta)
 	const float norm = delta/getBPCount();
 	for(int i = 0; i < weight_size; ++i)
 	{
-		weight[i] -= weight_grad[i]*norm;
+		weight[i] += weight_grad[i]*norm;
 	}
 	for(int i = 0; i < bias_size; ++i)
 	{
-		bias[i] -= bias_grad[i]*norm;
+		bias[i] += bias_grad[i]*norm;
 	}
 	getWeightGrad().clear();
 	getBiasGrad().clear();
