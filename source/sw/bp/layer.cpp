@@ -30,7 +30,7 @@ float LayerSW_BP::getCost() const
 {
 	float sum = 0.0f;
 	const int size = getSize();
-	const float *error = _output_error.getData();
+	const float *error = _input_error.getData();
 	for(int i = 0; i < size; ++i)
 	{
 		sum += error[i]*error[i];

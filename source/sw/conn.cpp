@@ -2,7 +2,7 @@
 
 #include <nn/exception.hpp>
 
-#include <cstdlib>
+#include <cstdio>
 
 ConnSW::ConnSW(ID id, int input_size, int output_size, int weight_size, int bias_size)
 	: Conn(id, input_size, output_size), _weight(weight_size), _bias(bias_size)
@@ -74,6 +74,6 @@ void ConnSW::BufferSW::randomize(float range)
 	const int size = getSize();
 	for(int i = 0; i < size; ++i)
 	{
-		data[i] = 2.0f*range*float(rand())/RAND_MAX - 1.0f;
+		data[i] = range*(float(rand())/RAND_MAX - 0.5f);
 	}
 }

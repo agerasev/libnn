@@ -12,10 +12,11 @@ float LayerExtSW_BP<EXT_SIGMOID>::_sigma_deriv(float a)
 void LayerExtSW_BP<EXT_SIGMOID>::_updateError()
 {
 	const int size = getSize();
-	float *output = getOutputError().getData();
-	const float *input = getInputError().getData();
+	float *output_error = getOutputError().getData();
+	const float *input_error = getInputError().getData();
+	const float *input = getInput().getData();
 	for(int i = 0; i < size; ++i)
 	{
-		output[i] = input[i]*_sigma_deriv(input[i]);
+		output_error[i] = input_error[i]*_sigma_deriv(input[i]);
 	}
 }
