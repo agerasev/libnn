@@ -1,6 +1,6 @@
 #include <nn/hw/layer.hpp>
 
-LayerHW::LayerHW(ID id, int size, cl_context context, cl::map<cl::kernel *> &kernels)
+LayerHW::LayerHW(ID id, int size, cl_context context, cl::map<cl::kernel *> *kernels)
 	: Layer(id, size), _kernels(kernels)
 {
 	_input_buffer = new ::cl::buffer_object(context, size*sizeof(cl_float));

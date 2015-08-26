@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(libnn)
+project(nn)
 
 include_directories(include libcl4u/include)
 
@@ -34,5 +34,5 @@ add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
 if(OPENCL)
 add_subdirectory(libcl4u)
-target_link_libraries(${PROJECT_NAME} libcl4u)
+target_link_libraries(${PROJECT_NAME} cl4u)
 endif(OPENCL)

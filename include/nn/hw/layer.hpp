@@ -1,24 +1,21 @@
 #pragma once
 
-#include <cl/map.hpp>
-#include <cl/kernel.hpp>
-#include <cl/buffer_object.hpp>
-
 #include "queueable.hpp"
 
 #include <nn/layer.hpp>
+#include <nn/hw/buffer.hpp>
 
-class LayerHW : public virtual Layer, public HWQueueable
+class LayerHW : public virtual Layer, public virtual QueueableHW
 {
 private:
-	cl::buffer_object *_input_buffer, *_output_buffer;
-	cl::map<cl::kernel *> &_kernels;
+	BufferHW _input, _output;
+	cl::map<cl::kernel *> *_kernels;
 	
 protected:
 	virtual void _bindQueue(cl_command_queue queue) override;
 	
 public:
-	LayerHW(ID id, int size, cl_context context, cl::map<cl::kernel *> &kernels);
+	LayerHW(ID id, int size, cl_context context, cl::map<cl::kernel *> *kernels);
 	virtual ~LayerHW();
 	
 	cl::buffer_object *getInput();

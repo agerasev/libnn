@@ -2,7 +2,7 @@
 
 #include <cl/queue.hpp>
 
-class HWQueueable
+class QueueableHW
 {
 private:
 	cl_command_queue _queue;
@@ -11,8 +11,8 @@ protected:
 	virtual void _bindQueue(cl_command_queue queue) = 0;
 	
 public:
-	HWQueueable() = default;
-	virtual ~HWQueueable() = default;
+	QueueableHW() = default;
+	virtual ~QueueableHW() = default;
 	
 	void bindQueue(cl_command_queue queue)
 	{
