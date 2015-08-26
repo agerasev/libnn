@@ -36,18 +36,18 @@ void Conn_BP::backprop(Layer *to, const Layer *from)
 	if(from_bp == nullptr)
 		throw Exception("input layer is not derived from Layer_BP");
 	
-	if(from_bp->getOutputError().isValid())
+	if(from_bp->getInputError().isValid())
 	{
 		if(to_bp != nullptr)
 		{
-			if(!to_bp->getInputError().isValid())
+			if(!to_bp->getOutputError().isValid())
 			{
-				if(!to_bp->getInputError().isZero())
-					to_bp->getInputError().clear();
-				to_bp->getInputError().validate(true);
+				if(!to_bp->getOutputError().isZero())
+					to_bp->getOutputError().clear();
+				to_bp->getOutputError().validate(true);
 			}
 			_backprop(to_bp, from_bp);
-			to_bp->getInputError().setZero(false);
+			to_bp->getOutputError().setZero(false);
 		}
 		else
 		{

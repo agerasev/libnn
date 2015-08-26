@@ -20,8 +20,9 @@ public:
 	virtual const LayerSW::BufferSW &getInputError() const override;
 	virtual const LayerSW::BufferSW &getOutputError() const override;
 	
-	virtual float getCost() const override;
+	virtual float getCost(float *result) const override;
 	
 protected:
 	virtual void _updateError() override;
+	virtual void _setDesiredOutput(float *result) override;
 };

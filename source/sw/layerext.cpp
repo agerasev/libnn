@@ -3,24 +3,24 @@
 #include <cmath>
 #include <nn/exception.hpp>
 
-LayerExtSW<EXT_NONE>::LayerExtSW(ID id, int size)
+LayerExtSW<LayerFunc::UNIFORM>::LayerExtSW(ID id, int size)
     : Layer(id, size), LayerSW(id, size)
 {
 	
 }
 
-LayerExtSW<EXT_SIGMOID>::LayerExtSW(ID id, int size)
+LayerExtSW<LayerFunc::SIGMOID>::LayerExtSW(ID id, int size)
     : Layer(id, size), LayerSW(id, size)
 {
 	
 }
 
-float LayerExtSW<EXT_SIGMOID>::_sigma(float a)
+float LayerExtSW<LayerFunc::SIGMOID>::_sigma(float a)
 {
 	return 1.0f/(1.0f + exp(-a));
 }
 
-void LayerExtSW<EXT_SIGMOID>::_update()
+void LayerExtSW<LayerFunc::SIGMOID>::_update()
 {
 	if(getInput().getSize() != getOutput().getSize())
 		throw Exception("input and output buffers sizes doesn't match");

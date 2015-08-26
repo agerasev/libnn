@@ -39,11 +39,11 @@ void ConnSW_BP::_commitGrad(float delta)
 	const float norm = delta/getBPCount();
 	for(int i = 0; i < weight_size; ++i)
 	{
-		weight[i] -= weight_grad[i]*norm;
+		weight[i] += weight_grad[i]*norm;
 	}
 	for(int i = 0; i < bias_size; ++i)
 	{
-		bias[i] -= bias_grad[i]*norm;
+		bias[i] += bias_grad[i]*norm;
 	}
 	getWeightGrad().clear();
 	getBiasGrad().clear();
@@ -59,7 +59,7 @@ void ConnSW_BP::_backprop(const Layer *to, const Layer_BP *from)
 	if(from_sw == nullptr)
 		throw Exception("input layer is not derived from LayerSW_BP");
 	
-	const float *input_error = from_sw->getOutputError().getData();
+	const float *input_error = from_sw->getInputError().getData();
 	int sx = getInputSize(), sy = getOutputSize();
 	
 	float *weight_grad = getWeightGrad().getData();
@@ -89,8 +89,8 @@ void ConnSW_BP::_backprop(Layer_BP *to, const Layer_BP *from)
 	if(from_sw == nullptr)
 		throw Exception("input layer is not derived from LayerSW_BP");
 	
-	float *output_error = to_sw->getInputError().getData();
-	const float *input_error = from_sw->getOutputError().getData();
+	float *output_error = to_sw->getOutputError().getData();
+	const float *input_error = from_sw->getInputError().getData();
 	const float *weight = getWeight().getData();
 	int sx = getInputSize(), sy = getOutputSize();
 	for(int ix = 0; ix < sx; ++ix)

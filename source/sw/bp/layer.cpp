@@ -26,14 +26,26 @@ const LayerSW::BufferSW &LayerSW_BP::getOutputError() const
 	return _output_error;
 }
 
-float LayerSW_BP::getCost() const
+void LayerSW_BP::_setDesiredOutput(float *result)
+{
+	const int size = getSize();
+	const float *output = getOutput().getData();
+	float *error = getOutputError().getData();
+	for(int i = 0; i < size; ++i)
+	{
+		error[i] = result[i] - output[i];
+	}
+}
+
+float LayerSW_BP::getCost(float *result) const
 {
 	float sum = 0.0f;
 	const int size = getSize();
-	const float *error = _input_error.getData();
+	const float *output = getOutput().getData();
 	for(int i = 0; i < size; ++i)
 	{
-		sum += error[i]*error[i];
+		float dif = output[i] - result[i];
+		sum += dif*dif;
 	}
 	sum *= 0.5f;
 	return sum;
@@ -42,8 +54,8 @@ float LayerSW_BP::getCost() const
 void LayerSW_BP::_updateError()
 {
 	const int size = getSize();
-	float *output = getOutputError().getData();
-	const float *input = getInputError().getData();
+	float *output = getInputError().getData();
+	const float *input = getOutputError().getData();
 	for(int i = 0; i < size; ++i)
 	{
 		output[i] = input[i];

@@ -1,7 +1,18 @@
 #pragma once
 
-#define EXT_NONE       0x0000
-#define EXT_SIGMOID    0x0001
+namespace LayerFunc
+{
+static const int 
+UNIFORM = 0x0000,
+SIGMOID = 0x0001;
+}
+
+namespace LayerCost
+{
+static const int
+QUADRIC       = 0x0000,
+CROSS_ENTROPY = 0x0100;
+}
 
 #include <nn/layer.hpp>
 

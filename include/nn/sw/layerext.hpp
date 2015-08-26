@@ -12,7 +12,7 @@ public:
 };
 
 template <>
-class LayerExtSW<EXT_NONE> : public virtual LayerSW, public virtual LayerExt<EXT_NONE>
+class LayerExtSW<LayerFunc::UNIFORM> : public virtual LayerSW, public virtual LayerExt<LayerFunc::UNIFORM>
 {
 protected:
 	LayerExtSW() : LayerExtSW(getID(), getSize()) {}
@@ -22,7 +22,7 @@ public:
 };
 
 template <>
-class LayerExtSW<EXT_SIGMOID> : public virtual LayerSW, public virtual LayerExt<EXT_SIGMOID>
+class LayerExtSW<LayerFunc::SIGMOID> : public virtual LayerSW, public virtual LayerExt<LayerFunc::SIGMOID>
 {
 protected:
 	LayerExtSW() : LayerExtSW(getID(), getSize()) {}

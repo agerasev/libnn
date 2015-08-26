@@ -13,7 +13,7 @@ public:
 };
 
 template <>
-class LayerExtSW_BP<EXT_NONE> : public virtual LayerSW_BP, public virtual LayerExtSW<EXT_NONE>, public virtual LayerExt_BP<EXT_NONE>
+class LayerExtSW_BP<LayerFunc::UNIFORM> : public virtual LayerSW_BP, public virtual LayerExtSW<LayerFunc::UNIFORM>, public virtual LayerExt_BP<LayerFunc::UNIFORM>
 {
 protected:
 	LayerExtSW_BP() : LayerExtSW_BP(getID(), getSize()) {}
@@ -23,7 +23,10 @@ public:
 };
 
 template <>
-class LayerExtSW_BP<EXT_SIGMOID> : public virtual LayerSW_BP, public virtual LayerExtSW<EXT_SIGMOID>, public virtual LayerExt_BP<EXT_SIGMOID>
+class LayerExtSW_BP<LayerFunc::SIGMOID> : 
+        public virtual LayerSW_BP, 
+        public virtual LayerExtSW<LayerFunc::SIGMOID>, 
+        public virtual LayerExt_BP<LayerFunc::SIGMOID>
 {
 protected:
 	LayerExtSW_BP() : LayerExtSW_BP(getID(), getSize()) {}
@@ -34,4 +37,25 @@ public:
 protected:
 	static float _sigma_deriv(float a);
 	virtual void _updateError() override;
+};
+
+template <>
+class LayerExtSW_BP<LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY> : 
+        public virtual LayerSW_BP, 
+        public virtual LayerExtSW<LayerFunc::SIGMOID>, 
+        public virtual LayerExt_BP<LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY>
+{
+private:
+	bool desired = false;
+protected:
+	LayerExtSW_BP() : LayerExtSW_BP(getID(), getSize()) {}
+public:
+	LayerExtSW_BP(ID id, int size) : Layer(id, size) {}
+	virtual ~LayerExtSW_BP() = default;
+	
+	virtual float getCost(float *result) const override;
+protected:
+	static float _sigma_deriv(float a);
+	virtual void _updateError() override;
+	virtual void _setDesiredOutput(float *result) override;
 };

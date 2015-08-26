@@ -2,14 +2,20 @@
 
 void Layer_BP::updateError()
 {
-	if(getInputError().isValid())
+	if(getOutputError().isValid())
 	{
 		_updateError();
-		getOutputError().validate(true);
-		getInputError().validate(false);
+		getInputError().validate(true);
+		getOutputError().validate(false);
 	}
 	else
 	{
-		getOutputError().validate(false);
+		getInputError().validate(false);
 	}
+}
+
+void Layer_BP::setDesiredOutput(float *result)
+{
+	_setDesiredOutput(result);
+	getOutputError().validate(true);
 }
