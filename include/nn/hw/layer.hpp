@@ -1,29 +1,50 @@
 #pragma once
 
-#include "queueable.hpp"
-
 #include <nn/layer.hpp>
 #include <nn/hw/buffer.hpp>
+#include <nn/hw/queueable.hpp>
+#include <nn/hw/kernelmap.h>
 
-class LayerHW : public virtual Layer, public virtual QueueableHW
+#include <cl/context.hpp>
+#include <cl/map.hpp>
+#include <cl/kernel.hpp>
+#include <cl/queue.hpp>
+
+class LayerHW : 
+        public virtual Layer, 
+        public virtual QueueableHW, 
+        public virtual KernelMapHW
 {
+public:
+	class BufferHW : 
+	        public virtual ::BufferHW, 
+	        public virtual Layer::Buffer
+	{
+	protected:
+		BufferHW() : BufferHW(getSize()) {}
+	public:
+		BufferHW(int size) : ::Buffer(size) {}
+		virtual ~BufferHW() = default;
+		
+		virtual void write(const float *data) override;
+		virtual void clear() override;
+	};
+	
 private:
-	BufferHW _input, _output;
-	cl::map<cl::kernel *> *_kernels;
+	BufferHW _input;
+	BufferHW _output;
 	
 protected:
-	virtual void _bindQueue(cl_command_queue queue) override;
-	
+	LayerHW(cl::context context, const cl::map<cl::kernel *> *kernels);
 public:
-	LayerHW(ID id, int size, cl_context context, cl::map<cl::kernel *> *kernels);
+	LayerHW(ID id, int size, cl::context context, const cl::map<cl::kernel *> *kernels);
 	virtual ~LayerHW();
 	
-	cl::buffer_object *getInput();
-	cl::buffer_object *getOutput() const; 
+	virtual BufferHW &getInput() override;
+	virtual BufferHW &getOutput() override;
+	virtual const BufferHW &getInput() const override;
+	virtual const BufferHW &getOutput() const override;
 	
-private:
-	virtual void _write(const float *data) override;
-	virtual void _read(float *data) const override;
-	virtual void _clear() override;
+protected:
 	virtual void _update() override;
 };

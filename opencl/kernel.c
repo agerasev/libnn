@@ -32,3 +32,13 @@ kernel void fill(const uint size, global float *buffer, const float number)
 		buffer[pos] = number;
 	}
 }
+
+kernel void update_uniform(const uint size, global const float *input, global float *output)
+{
+	const uint pos = get_global_id(0);
+	
+	if(pos < size)
+	{
+		output[pos] = input[pos];
+	}
+}

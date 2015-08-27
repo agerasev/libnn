@@ -1,13 +1,13 @@
 #include <nn/hw/buffer.hpp>
 
-BufferHW::BufferHW()
-    : BufferHW(getSize())
+BufferHW::BufferHW(cl::context context)
+    : BufferHW(getSize(), context, &getKernelMap())
 {
 	
 }
 
-BufferHW::BufferHW(cl_context context, int size)
-    : Buffer(size), _buffer(context, size)
+BufferHW::BufferHW(int size, cl::context context, const cl::map<cl::kernel *> *kernels)
+    : Buffer(size), _buffer(context, size), KernelMapHW(kernels)
 {
 	
 }
@@ -29,16 +29,21 @@ void BufferHW::write(const float *data)
 
 void BufferHW::clear()
 {
-	
+	cl::work_range range({getSize()});
+	getKernel("fill")->evaluate(range, getSize(), getCLBuffer(), 0.0f);
 }
 
-float *BufferHW::getData()
+cl::buffer_object *BufferHW::getBuffer()
 {
-	return _data;
+	return &_buffer;
 }
 
-const float *BufferHW::getData() const
+const cl::buffer_object *BufferHW::getBuffer() const
 {
-	return _data;
+	return &_buffer;
 }
 
+void BufferHW::_bindQueue(cl_command_queue queue)
+{
+	_buffer.bind_queue(queue);
+}

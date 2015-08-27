@@ -1,53 +1,50 @@
 #include <nn/hw/layer.hpp>
 
-LayerHW::LayerHW(ID id, int size, cl_context context, cl::map<cl::kernel *> *kernels)
-	: Layer(id, size), _kernels(kernels)
+LayerHW::LayerHW(cl::context context, cl::map<cl::kernel *> *kernels)
+	: LayerHW(getID(), getSize(), context, &getKernelMap())
 {
-	_input_buffer = new ::cl::buffer_object(context, size*sizeof(cl_float));
-	_output_buffer = new ::cl::buffer_object(context, size*sizeof(cl_float));
+	
+}
+
+LayerHW::LayerHW(ID id, int size, cl::context context, cl::map<cl::kernel *> *kernels)
+	: Layer(id, size), _input(size, context, kernels), _output(size, context, kernels), KernelMapHW(kernels)
+{
+	
 }
 
 LayerHW::~LayerHW()
 {
-	delete _input_buffer;
-	delete _output_buffer;
+	
 }
 
 void LayerHW::_bindQueue(cl_command_queue queue)
 {
-	_input_buffer->bind_queue(queue);
-	_output_buffer->bind_queue(queue);
+	_input.bindQueue(queue);
+	_output.bindQueue(queue);
 }
 
-cl::buffer_object *LayerHW::getInput()
+LayerHW::BufferHW &LayerHW::getInput()
 {
-	return _input_buffer;
+	return _input;
 }
 
-cl::buffer_object *LayerHW::getOutput() const
+LayerHW::BufferHW &LayerHW::getOutput()
 {
-	return _output_buffer;
+	return _output;
 }
 
-void LayerHW::_write(const float *data)
+const LayerHW::BufferHW &LayerHW::getInput() const
 {
-	_input_buffer->store_data(data);
+	return _input;
 }
 
-void LayerHW::_read(float *data) const
+const LayerHW::BufferHW &LayerHW::getOutput() const
 {
-	_output_buffer->load_data(data);
-}
-
-void LayerHW::_clear()
-{
-	float zero = 0.0;
-	_kernels["fill"]->evaluate(cl::work_range({unsigned(getSize())}),getSize(),_input_buffer,zero);
+	return _output;
 }
 
 void LayerHW::_update()
 {
-	cl::buffer_object *temp_buffer = _input_buffer;
-	_input_buffer = _output_buffer;
-	_output_buffer = temp_buffer;
+	cl::work_range range({getSize()});
+	getKernel("update_uniform")->evaluate(range, getSize(), _input.getBuffer(), _output.getBuffer());
 }

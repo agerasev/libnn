@@ -24,6 +24,7 @@ set(SOURCE
 if(OPENCL)
 set(SOURCE
 	${SOURCE}
+	source/hw/buffer.cpp
 	source/hw/layer.cpp
 	source/hw/conn.cpp
 	source/hw/factory.cpp
