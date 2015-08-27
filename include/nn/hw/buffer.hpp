@@ -1,8 +1,7 @@
 #pragma once
 
 #include <nn/buffer.hpp>
-#include <nn/hw/queueable.hpp>
-#include <nn/hw/kernelmap.h>
+#include <nn/hw/kit.hpp>
 
 #include <cl/context.hpp>
 #include <cl/buffer_object.hpp>
@@ -11,16 +10,15 @@
 
 class BufferHW : 
         public virtual Buffer, 
-        public virtual QueueableHW,
-        public virtual KernelMapHW
+        public virtual KitHW
 {
 private:
 	cl::buffer_object _buffer;
 	
 protected:
-	BufferHW(cl::context context);
+	BufferHW();
 public:
-	BufferHW(int size, cl::context context, const cl::map<cl::kernel *> *kernels);
+	BufferHW(int size, const KitHW *kit);
 	virtual ~BufferHW();
 	
 	virtual void read(float *data) const override;
@@ -31,5 +29,5 @@ public:
 	const cl::buffer_object *getBuffer() const;
 	
 protected:
-	virtual void _bindQueue(cl_command_queue queue) override;
+	virtual void _bindQueue(cl::queue *queue) override;
 };

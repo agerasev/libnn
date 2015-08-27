@@ -1,7 +1,6 @@
 #include <nn/sw/bp/layerext.hpp>
 
 #include <cmath>
-
 static float _sigma_deriv_frame(float e)
 {
 	float d = (1.0f + e);
@@ -42,7 +41,10 @@ float LayerExtSW_BP< LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY >::getCost(fl
 	const float *output = getOutput().getData();
 	for(int i = 0; i < size; ++i)
 	{
-		sum -= result[i]*log(output[i]) + (1.0f - result[i])*log(1.0f - output[i]);
+		float dc = result[i]*log(output[i]) + (1.0f - result[i])*log(1.0f - output[i]);
+		if(std::isnan(dc) || std::isinf(dc))
+			continue;
+		sum -= dc;
 	}
 	return sum;
 }

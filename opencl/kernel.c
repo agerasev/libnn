@@ -42,3 +42,18 @@ kernel void update_uniform(const uint size, global const float *input, global fl
 		output[pos] = input[pos];
 	}
 }
+
+float sigma(float a)
+{
+	return 1.0f/(1.0f + exp(-a));
+}
+
+kernel void update_sigmoid(const uint size, global const float *input, global float *output)
+{
+	const uint pos = get_global_id(0);
+	
+	if(pos < size)
+	{
+		output[pos] = sigma(input[pos]);
+	}
+}

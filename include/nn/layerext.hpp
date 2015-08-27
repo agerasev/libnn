@@ -3,8 +3,8 @@
 namespace LayerFunc
 {
 static const int 
-UNIFORM = 0x0000,
-SIGMOID = 0x0001;
+UNIFORM = 0x00,
+SIGMOID = 0x01;
 }
 
 namespace LayerCost
@@ -23,7 +23,7 @@ public:
 	static const int extension = X;
 
 protected:
-	LayerExt() : Layer(0, 0) {}
+	LayerExt() : Layer(getID(), getSize()) {}
 public:
 	virtual ~LayerExt() = default;
 };

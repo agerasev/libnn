@@ -3,13 +3,11 @@
 #include <nn/conn.hpp>
 #include <nn/hw/layer.hpp>
 #include <nn/hw/buffer.hpp>
-#include <nn/hw/queueable.hpp>
-#include <nn/hw/kernelmap.h>
+#include <nn/hw/kit.hpp>
 
 class ConnHW : 
         public virtual Conn,
-        public virtual QueueableHW,
-        public virtual KernelMapHW
+        public virtual KitHW
 {
 public:
 	class BufferHW : 
@@ -17,9 +15,9 @@ public:
 	        public virtual Buffer
 	{
 	protected:
-		BufferHW() : BufferHW(getSize()) {}
+		BufferHW() : BufferHW(getSize(), this) {}
 	public:
-		BufferHW(int size) : ::Buffer(size) {}
+		BufferHW(int size, const KitHW *kit) : ::Buffer(size), KitHW(kit) {}
 		virtual ~BufferHW() = default;
 		
 		virtual void randomize(float range = 1.0f) override;
@@ -30,10 +28,10 @@ private:
 	BufferHW _bias;
 	
 protected:
-	ConnHW(ID id, int input_size, int output_size, int weight_size, int bias_size, cl::context context, const cl::map<cl::kernel *> *kernels);
-	ConnHW(cl::context context, const cl::map<cl::kernel *> *kernels);
+	ConnHW(ID id, int input_size, int output_size, int weight_size, int bias_size, const KitHW *kit);
+	ConnHW();
 public:
-	ConnHW(ID id, int input_size, int output_size, cl::context context, const cl::map<cl::kernel *> *kernels);
+	ConnHW(ID id, int input_size, int output_size, const KitHW *kit);
 	virtual ~ConnHW();
 	
 	virtual BufferHW &getWeight() override;
@@ -43,4 +41,5 @@ public:
 	
 protected:
 	virtual void _transmit(const Layer *from, Layer *to) const override;
+	virtual void _bindQueue(cl::queue *queue) override;
 };

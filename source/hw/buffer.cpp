@@ -1,13 +1,13 @@
 #include <nn/hw/buffer.hpp>
 
-BufferHW::BufferHW(cl::context context)
-    : BufferHW(getSize(), context, &getKernelMap())
+BufferHW::BufferHW()
+    : BufferHW(getSize(), this)
 {
 	
 }
 
-BufferHW::BufferHW(int size, cl::context context, const cl::map<cl::kernel *> *kernels)
-    : Buffer(size), _buffer(context, size), KernelMapHW(kernels)
+BufferHW::BufferHW(int size, const KitHW *kit)
+    : Buffer(size), KitHW(kit), _buffer(size, kit->getContext())
 {
 	
 }
@@ -43,7 +43,7 @@ const cl::buffer_object *BufferHW::getBuffer() const
 	return &_buffer;
 }
 
-void BufferHW::_bindQueue(cl_command_queue queue)
+void BufferHW::_bindQueue(cl::queue *queue)
 {
 	_buffer.bind_queue(queue);
 }

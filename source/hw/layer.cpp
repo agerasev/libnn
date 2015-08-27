@@ -1,13 +1,13 @@
 #include <nn/hw/layer.hpp>
 
-LayerHW::LayerHW(cl::context context, cl::map<cl::kernel *> *kernels)
-	: LayerHW(getID(), getSize(), context, &getKernelMap())
+LayerHW::LayerHW()
+	: LayerHW(getID(), getSize(), this)
 {
 	
 }
 
-LayerHW::LayerHW(ID id, int size, cl::context context, cl::map<cl::kernel *> *kernels)
-	: Layer(id, size), _input(size, context, kernels), _output(size, context, kernels), KernelMapHW(kernels)
+LayerHW::LayerHW(ID id, int size, const KitHW *kit)
+	: Layer(id, size), _input(size, kit), _output(size, kit), KitHW(kit)
 {
 	
 }
@@ -15,12 +15,6 @@ LayerHW::LayerHW(ID id, int size, cl::context context, cl::map<cl::kernel *> *ke
 LayerHW::~LayerHW()
 {
 	
-}
-
-void LayerHW::_bindQueue(cl_command_queue queue)
-{
-	_input.bindQueue(queue);
-	_output.bindQueue(queue);
 }
 
 LayerHW::BufferHW &LayerHW::getInput()
@@ -47,4 +41,10 @@ void LayerHW::_update()
 {
 	cl::work_range range({getSize()});
 	getKernel("update_uniform")->evaluate(range, getSize(), _input.getBuffer(), _output.getBuffer());
+}
+
+void LayerHW::_bindQueue(cl::queue *queue)
+{
+	_input.bindQueue(queue);
+	_output.bindQueue(queue);
 }

@@ -2,8 +2,7 @@
 
 #include <nn/layer.hpp>
 #include <nn/hw/buffer.hpp>
-#include <nn/hw/queueable.hpp>
-#include <nn/hw/kernelmap.h>
+#include <nn/hw/kit.hpp>
 
 #include <cl/context.hpp>
 #include <cl/map.hpp>
@@ -12,8 +11,7 @@
 
 class LayerHW : 
         public virtual Layer, 
-        public virtual QueueableHW, 
-        public virtual KernelMapHW
+        public virtual KitHW
 {
 public:
 	class BufferHW : 
@@ -21,9 +19,9 @@ public:
 	        public virtual Layer::Buffer
 	{
 	protected:
-		BufferHW() : BufferHW(getSize()) {}
+		BufferHW() : BufferHW(getSize(), this) {}
 	public:
-		BufferHW(int size) : ::Buffer(size) {}
+		BufferHW(int size, const KitHW *kit) : ::Buffer(size), KitHW(kit) {}
 		virtual ~BufferHW() = default;
 		
 		virtual void write(const float *data) override;
@@ -35,9 +33,9 @@ private:
 	BufferHW _output;
 	
 protected:
-	LayerHW(cl::context context, const cl::map<cl::kernel *> *kernels);
+	LayerHW();
 public:
-	LayerHW(ID id, int size, cl::context context, const cl::map<cl::kernel *> *kernels);
+	LayerHW(ID id, int size, const KitHW *kit);
 	virtual ~LayerHW();
 	
 	virtual BufferHW &getInput() override;
@@ -47,4 +45,5 @@ public:
 	
 protected:
 	virtual void _update() override;
+	virtual void _bindQueue(cl::queue *queue) override;
 };

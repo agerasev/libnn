@@ -4,13 +4,13 @@
 #include <nn/exception.hpp>
 
 LayerExtSW<LayerFunc::UNIFORM>::LayerExtSW(ID id, int size)
-    : Layer(id, size), LayerSW(id, size)
+    : Layer(id, size)
 {
 	
 }
 
 LayerExtSW<LayerFunc::SIGMOID>::LayerExtSW(ID id, int size)
-    : Layer(id, size), LayerSW(id, size)
+    : Layer(id, size)
 {
 	
 }

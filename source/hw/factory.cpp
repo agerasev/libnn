@@ -1,4 +1,5 @@
 #include <nn/hw/factory.hpp>
+#include <nn/exception.hpp>
 
 FactoryHW::FactoryHW(const std::string &kernel_file)
 {
@@ -13,21 +14,31 @@ FactoryHW::~FactoryHW()
 	delete session;
 }
 
-LayerHW *FactoryHW::createLayer(Layer::ID id, int size)
+LayerHW *FactoryHW::createLayer(Layer::ID id, int size, int extension)
 {
-	LayerHW *layer = new LayerHW(id,size,session->get_context().get_cl_context(),program->get_kernel_map());
-	layer->bindQueue(session->get_queue());
+	LayerHW *layer;
+	KitHW kit(&session->get_context(), &program->get_kernel_map());
+	if(extension == LayerFunc::UNIFORM)
+	{
+		layer = new LayerHW(id, size, &kit);
+	}
+	else
+	if(extension == LayerFunc::SIGMOID)
+	{
+		layer = new LayerExtHW<LayerFunc::SIGMOID>(id, size, &kit);
+	}
+	else
+	{
+		throw Exception("there is no such layer extension code: " + std::to_string(extension));
+	}
+	layer->bindQueue(&session->get_queue());
 	return layer;
 }
 
 ConnHW *FactoryHW::createConn(Conn::ID id, int input_size, int output_size)
 {
-	ConnHW *connection = new 
-			ConnHW(
-				id, input_size, output_size,
-	      session->get_context().get_cl_context(),
-				program->get_kernel_map()
-				);
-	connection->bindQueue(session->get_queue());
+	KitHW kit(&session->get_context(), &program->get_kernel_map());
+	ConnHW *connection = new ConnHW(id, input_size, output_size, &kit);
+	connection->bindQueue(&session->get_queue());
 	return connection;
 }
