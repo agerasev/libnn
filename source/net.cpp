@@ -57,7 +57,7 @@ void Net::forConns(std::function<void(Conn *)> func)
 	}
 }
 
-void Net::forConns(std::function<void(Conn *, Layer *, Layer *)> func)
+void Net::forConnsWithLayers(std::function<void(Conn *, Layer *, Layer *)> func)
 {
 	for(const std::pair<Conn::ID, Conn *> &p : _conns)
 	{

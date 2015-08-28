@@ -25,7 +25,7 @@ public:
 	
 	void forLayers(std::function<void(Layer *)> func);
 	void forConns(std::function<void(Conn *)> func);
-	void forConns(std::function<void(Conn *, Layer *, Layer *)> func);
+	void forConnsWithLayers(std::function<void(Conn *, Layer *, Layer *)> func);
 	
 	virtual void stepForward();
 };
