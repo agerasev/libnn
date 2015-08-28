@@ -14,7 +14,7 @@ FactoryHW::~FactoryHW()
 	delete session;
 }
 
-LayerHW *FactoryHW::createLayer(Layer::ID id, int size, int extension)
+LayerHW *FactoryHW::newLayer(Layer::ID id, int size, int extension)
 {
 	LayerHW *layer;
 	KitHW kit(&session->get_context(), &program->get_kernel_map());
@@ -35,7 +35,7 @@ LayerHW *FactoryHW::createLayer(Layer::ID id, int size, int extension)
 	return layer;
 }
 
-ConnHW *FactoryHW::createConn(Conn::ID id, int input_size, int output_size)
+ConnHW *FactoryHW::newConn(Conn::ID id, int input_size, int output_size)
 {
 	KitHW kit(&session->get_context(), &program->get_kernel_map());
 	ConnHW *connection = new ConnHW(id, input_size, output_size, &kit);

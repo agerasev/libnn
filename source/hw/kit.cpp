@@ -12,7 +12,7 @@ KitHW::KitHW(const KitHW &kit)
 	_bindQueue(_queue);
 }
 
-KitHW(const KitHW *kit)
+KitHW::KitHW(const KitHW *kit)
     : KitHW(*kit)
 {
 	
@@ -41,7 +41,7 @@ const cl::kernel_map *KitHW::getKernelMap() const
 
 cl::kernel *KitHW::getKernel(const std::string &kernel_name) const
 {
-	return _kernels[kernel_name];
+	return (*_kernels)[kernel_name];
 }
 
 void KitHW::_bindQueue(cl::queue *queue)

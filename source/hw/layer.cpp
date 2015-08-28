@@ -1,13 +1,13 @@
 #include <nn/hw/layer.hpp>
 
 LayerHW::LayerHW()
-	: LayerHW(getID(), getSize(), this)
+	: LayerHW(getID(), getSize(), static_cast<KitHW *>(this))
 {
 	
 }
 
 LayerHW::LayerHW(ID id, int size, const KitHW *kit)
-	: Layer(id, size), _input(size, kit), _output(size, kit), KitHW(kit)
+	: Layer(id, size), KitHW(kit), _input(size, kit), _output(size, kit)
 {
 	
 }
@@ -39,7 +39,7 @@ const LayerHW::BufferHW &LayerHW::getOutput() const
 
 void LayerHW::_update()
 {
-	cl::work_range range({getSize()});
+	cl::work_range range({unsigned(getSize())});
 	getKernel("update_uniform")->evaluate(range, getSize(), _input.getBuffer(), _output.getBuffer());
 }
 
@@ -47,4 +47,17 @@ void LayerHW::_bindQueue(cl::queue *queue)
 {
 	_input.bindQueue(queue);
 	_output.bindQueue(queue);
+}
+
+void LayerHW::BufferHW::write(const float *data)
+{
+	::BufferHW::write(data);
+	setZero(false);
+	validate(true);
+}
+
+void LayerHW::BufferHW::clear()
+{
+	::BufferHW::clear();
+	setZero(true);
 }

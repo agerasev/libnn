@@ -1,12 +1,14 @@
 #include <nn/hw/conn.hpp>
 
+#include <nn/exception.hpp>
+
 #include <cstdlib>
 
 ConnHW::ConnHW(ID id, int input_size, int output_size, int weight_size, int bias_size, const KitHW *kit)
-    : Conn(id, input_size, output_size), 
+    : Conn(id, input_size, output_size),
+      KitHW(kit),
       _weight(weight_size, kit), 
-      _bias(bias_size, kit),
-      KitHW(kit)
+      _bias(bias_size, kit)
 {
 	
 }
@@ -29,22 +31,22 @@ ConnHW::~ConnHW()
 }
         
 
-BufferHW &ConnHW::getWeight()
+ConnHW::BufferHW &ConnHW::getWeight()
 {
 	return _weight;
 }
 
-BufferHW &ConnHW::getBias()
+ConnHW::BufferHW &ConnHW::getBias()
 {
 	return _bias;
 }
 
-const BufferHW &ConnHW::getWeight() const
+const ConnHW::BufferHW &ConnHW::getWeight() const
 {
 	return _weight;
 }
 
-const BufferHW &ConnHW::getBias() const
+const ConnHW::BufferHW &ConnHW::getBias() const
 {
 	return _bias;
 }
@@ -59,7 +61,7 @@ void ConnHW::_transmit(const Layer *from, Layer *to) const
 	if(output == nullptr)
 		throw Exception("output layer is not derived from LayerHW");
 	
-	cl::work_range range({getOutputSize()});
+	cl::work_range range({unsigned(getOutputSize())});
 	getKernel("transmit")->evaluate(
 				range, getInputSize(), getOutputSize(),
 				input->getOutput(), output->getInput(), 
@@ -73,7 +75,7 @@ void ConnHW::_bindQueue(cl::queue *queue)
 	_bias.bindQueue(queue);
 }
 
-void ConnHW::BufferHW::randomize(float range = 1.0f)
+void ConnHW::BufferHW::randomize(float range)
 {
 	// TODO: randomize on GPU
 	int size = getSize();
@@ -83,5 +85,6 @@ void ConnHW::BufferHW::randomize(float range = 1.0f)
 		data[i] = range*(float(rand())/RAND_MAX - 0.5f);
 	}
 	getBuffer()->store_data(data);
+	getQueue()->flush();
 	delete[] data;
 }

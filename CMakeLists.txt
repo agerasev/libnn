@@ -27,6 +27,7 @@ set(SOURCE
 	source/hw/kit.cpp
 	source/hw/buffer.cpp
 	source/hw/layer.cpp
+	source/hw/layerext.cpp
 	source/hw/conn.cpp
 	source/hw/factory.cpp
 )

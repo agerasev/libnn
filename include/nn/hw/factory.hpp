@@ -18,6 +18,6 @@ public:
 	FactoryHW(const std::string &kernel_file);
 	~FactoryHW();
 	
-	LayerHW *createLayer(Layer::ID id, int size, int extension = LayerFunc::UNIFORM);
-	ConnHW *createConn(Conn::ID id, int input_size, int output_size);
+	LayerHW *newLayer(Layer::ID id, int size, int extension = LayerFunc::UNIFORM);
+	ConnHW *newConn(Conn::ID id, int input_size, int output_size);
 };

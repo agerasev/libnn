@@ -15,7 +15,7 @@ LayerExtHW<LayerFunc::SIGMOID>::LayerExtHW(ID id, int size, const KitHW *kit)
 
 void LayerExtHW<LayerFunc::SIGMOID>::_update()
 {
-	cl::work_range range({getSize()});
-	getKernel("update_sigmoid")->evaluate(range, getSize(), _input.getBuffer(), _output.getBuffer());
+	cl::work_range range({unsigned(getSize())});
+	getKernel("update_sigmoid")->evaluate(range, getSize(), getInput().getBuffer(), getOutput().getBuffer());
 }
 
