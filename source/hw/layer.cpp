@@ -39,7 +39,7 @@ const LayerHW::BufferHW &LayerHW::getOutput() const
 
 void LayerHW::_update()
 {
-	cl::work_range range({unsigned(getSize())});
+	cl::work_range range(getSize());
 	getKernel("update_uniform")->evaluate(range, getSize(), _input.getBuffer(), _output.getBuffer());
 }
 

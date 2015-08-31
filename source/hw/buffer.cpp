@@ -7,7 +7,7 @@ BufferHW::BufferHW()
 }
 
 BufferHW::BufferHW(int size, const KitHW *kit)
-    : Buffer(size), KitHW(kit), _buffer(*kit->getContext(), size)
+    : Buffer(size), KitHW(kit), _buffer(*kit->getContext(), size*sizeof(float))
 {
 	
 }
@@ -20,18 +20,16 @@ BufferHW::~BufferHW()
 void BufferHW::read(float *data) const
 {
 	_buffer.load_data(data);
-	getQueue()->flush();
 }
 
 void BufferHW::write(const float *data)
 {
 	_buffer.store_data(data);
-	getQueue()->flush();
 }
 
 void BufferHW::clear()
 {
-	cl::work_range range({unsigned(getSize())});
+	cl::work_range range(getSize());
 	getKernel("fill")->evaluate(range, getSize(), getBuffer(), 0.0f);
 }
 

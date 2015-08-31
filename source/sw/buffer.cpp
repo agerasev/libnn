@@ -3,7 +3,7 @@
 BufferSW::BufferSW()
     : BufferSW(getSize())
 {
-	clear();
+	
 }
 
 BufferSW::BufferSW(int size)

@@ -61,10 +61,10 @@ void ConnHW::_transmit(const Layer *from, Layer *to) const
 	if(output == nullptr)
 		throw Exception("output layer is not derived from LayerHW");
 	
-	cl::work_range range({unsigned(getOutputSize())});
+	cl::work_range range(getOutputSize());
 	getKernel("transmit")->evaluate(
 				range, getInputSize(), getOutputSize(),
-				input->getOutput(), output->getInput(), 
+				input->getOutput().getBuffer(), output->getInput().getBuffer(), 
 				_weight.getBuffer(), _bias.getBuffer()
 				);
 }
@@ -85,6 +85,5 @@ void ConnHW::BufferHW::randomize(float range)
 		data[i] = range*(float(rand())/RAND_MAX - 0.5f);
 	}
 	getBuffer()->store_data(data);
-	getQueue()->flush();
 	delete[] data;
 }
