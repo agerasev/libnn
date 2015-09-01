@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 2.6)
 project(nn)
 
-include_directories(include libcl4u/include)
+if (CMAKE_COMPILER_IS_GNUCXX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -Wall")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall")
+elseif (MSVC)
+	
+endif()
+
+include_directories(include)
 
 set(SOURCE 
 	source/buffer.cpp
@@ -21,21 +28,23 @@ set(SOURCE
 	source/sw/bp/layerext.cpp
 )
 
-if(OPENCL)
-set(SOURCE
-	${SOURCE}
-	source/hw/kit.cpp
-	source/hw/buffer.cpp
-	source/hw/layer.cpp
-	source/hw/layerext.cpp
-	source/hw/conn.cpp
-	source/hw/factory.cpp
-)
-endif(OPENCL)
+find_package(OpenCL)
+if(OPENCL_FOUND)
+	include_directories(${OPENCL_INCLUDE_DIRS} libcl4u/include)
+	set(SOURCE
+		${SOURCE}
+		source/hw/kit.cpp
+		source/hw/buffer.cpp
+		source/hw/layer.cpp
+		source/hw/layerext.cpp
+		source/hw/conn.cpp
+		source/hw/factory.cpp
+	)
+endif(OPENCL_FOUND)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-if(OPENCL)
+if(OPENCL_FOUND)
 add_subdirectory(libcl4u)
 target_link_libraries(${PROJECT_NAME} cl4u)
-endif(OPENCL)
+endif(OPENCL_FOUND)
