@@ -10,7 +10,6 @@ kernel void transmit(
 {
 	const uint size = out_size;
 	const uint pos = get_global_id(0);
-	
 	if(pos < size)
 	{
 		int i;
@@ -26,7 +25,6 @@ kernel void transmit(
 kernel void fill(const uint size, global float *buffer, const float number)
 {
 	const uint pos = get_global_id(0);
-	
 	if(pos < size)
 	{
 		buffer[pos] = number;
@@ -36,7 +34,6 @@ kernel void fill(const uint size, global float *buffer, const float number)
 kernel void update_uniform(const uint size, global const float *input, global float *output)
 {
 	const uint pos = get_global_id(0);
-	
 	if(pos < size)
 	{
 		output[pos] = input[pos];
@@ -51,9 +48,26 @@ float sigma(float a)
 kernel void update_sigmoid(const uint size, global const float *input, global float *output)
 {
 	const uint pos = get_global_id(0);
-	
 	if(pos < size)
 	{
 		output[pos] = sigma(input[pos]);
+	}
+}
+
+kernel void setError_quartic(const uint size, global const float *result, global const float *output, global float *error)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		error[pos] = result[pos] - output[pos];
+	}
+}
+
+kernel void setErrorC_quartic(const uint size, global const float *output, global float *error)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		error[pos] -= output[pos];
 	}
 }
