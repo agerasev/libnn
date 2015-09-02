@@ -71,3 +71,56 @@ kernel void setErrorC_quartic(const uint size, global const float *output, globa
 		error[pos] -= output[pos];
 	}
 }
+
+kernel void updateError_uniform(const uint size, global float *input_error, global const float *output_error)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		input_error[pos] = output_error[pos];
+	}
+}
+
+kernel void backpropWeightGrad(
+    const uint2 size, global const float *src_input_error, global const float *dst_output,
+    global float *weight_grad
+    )
+{
+	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
+	if(pos.x < size.x && pos.y < size.y)
+	{
+		weight_grad[pos.y*size.x + pos.x] += dst_output[pos.x]*src_input_error[pos.y];
+	}
+}
+
+kernel void backpropBiasGrad(
+    const uint size, global const float *src_input_error,
+    global const float *bias_grad
+    )
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		bias_grad[pos] += src_input_error[pos];
+	}
+}
+
+kernel void backpropError(
+    const uint in_size, const uint out_size, 
+    global const float *src_error, global float *dst_error,
+    global const float *weight, global const float *bias
+    )
+{
+	const uint size = out_size;
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		int i;
+		float sum = 0.0;
+		for(i = 0; i < in_size; ++i)
+		{
+			sum += input[i]*weight[in_size*pos + i];
+		}
+		output[pos] += sum + bias[pos];
+	}
+}

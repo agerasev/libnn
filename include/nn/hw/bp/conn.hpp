@@ -11,9 +11,9 @@ private:
 	
 	// TODO: add weight_size and bias_size to ctor
 protected:
-	ConnHW_BP() : ConnHW_BP(getID(), getInputSize(), getOutputSize()) {}
+	ConnHW_BP();
 public:
-	ConnHW_BP(ID id, int input_size, int output_size);
+	ConnHW_BP(ID id, int input_size, int output_size, const KitHW *kit);
 	virtual ~ConnHW_BP() = default;
 	
 	virtual ConnHW::BufferHW &getWeightGrad() override;
