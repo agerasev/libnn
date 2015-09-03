@@ -1,7 +1,7 @@
 #include <nn/hw/bp/layer.hpp>
 
 LayerHW_BP::LayerHW_BP(ID id, int size, const KitHW *kit)
-    : Layer(id, size), KitHW(kit), _input_error(size), _output_error(size)
+    : Layer(id, size), KitHW(kit), _input_error(size, kit), _output_error(size, kit)
 {
 	
 }
@@ -26,6 +26,12 @@ const LayerHW::BufferHW &LayerHW_BP::getOutputError() const
 	return _output_error;
 }
 
+void LayerHW_BP::setDesiredOutput(const cl::buffer_object *result)
+{
+	_setDesiredOutput(result);
+	getOutputError().validate(true);
+}
+
 void LayerHW_BP::_setDesiredOutput(const float *result)
 {
 	getOutputError().getBuffer()->store_data(result);
@@ -43,7 +49,7 @@ void LayerHW_BP::_setDesiredOutput(const cl::buffer_object *result)
 	      );
 }
 
-float LayerHW_BP::getCost(float *result) const
+float LayerHW_BP::getCost(const float *result) const
 {
 	float sum = 0.0f;
 	const int size = getSize();
@@ -54,7 +60,7 @@ float LayerHW_BP::getCost(float *result) const
 		float dif = output[i] - result[i];
 		sum += dif*dif;
 	}
-	delete[] data;
+	delete[] output;
 	sum *= 0.5f;
 	return sum;
 }

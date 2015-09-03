@@ -26,7 +26,7 @@ const LayerSW::BufferSW &LayerSW_BP::getOutputError() const
 	return _output_error;
 }
 
-void LayerSW_BP::_setDesiredOutput(float *result)
+void LayerSW_BP::_setDesiredOutput(const float *result)
 {
 	const int size = getSize();
 	const float *output = getOutput().getData();
@@ -37,7 +37,7 @@ void LayerSW_BP::_setDesiredOutput(float *result)
 	}
 }
 
-float LayerSW_BP::getCost(float *result) const
+float LayerSW_BP::getCost(const float *result) const
 {
 	float sum = 0.0f;
 	const int size = getSize();

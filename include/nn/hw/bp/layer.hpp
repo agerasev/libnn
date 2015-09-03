@@ -20,9 +20,11 @@ public:
 	virtual const LayerHW::BufferHW &getInputError() const override;
 	virtual const LayerHW::BufferHW &getOutputError() const override;
 	
-	virtual float getCost(float *result) const override;
+	virtual float getCost(const float *result) const override;
+	void setDesiredOutput(const cl::buffer_object *result);
 	
 protected:
 	virtual void _updateError() override;
-	virtual void _setDesiredOutput(float *result) override;
+	virtual void _setDesiredOutput(const float *result) override;
+	virtual void _setDesiredOutput(const cl::buffer_object *result);
 };

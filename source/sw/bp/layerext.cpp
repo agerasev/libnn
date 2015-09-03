@@ -34,7 +34,7 @@ void LayerExtSW_BP<LayerFunc::SIGMOID>::_updateError()
 	}
 }
 
-float LayerExtSW_BP< LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY >::getCost(float *result) const
+float LayerExtSW_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY>::getCost(const float *result) const
 {
 	float sum = 0.0f;
 	const int size = getSize();
@@ -100,7 +100,7 @@ void LayerExtSW_BP< LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY >::_updateErro
 	desired = false;
 }
 
-void LayerExtSW_BP< LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY >::_setDesiredOutput(float *result)
+void LayerExtSW_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY>::_setDesiredOutput(const float *result)
 {
 	const int size = getSize();
 	float *output_error = getOutputError().getData();

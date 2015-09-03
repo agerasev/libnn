@@ -10,7 +10,7 @@
 
 class FactoryHW
 {
-private:
+protected:
 	cl::session *session;
 	cl::program *program;
 	

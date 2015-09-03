@@ -53,9 +53,9 @@ public:
 	LayerExtSW_BP(ID id, int size) : Layer(id, size) {}
 	virtual ~LayerExtSW_BP() = default;
 	
-	virtual float getCost(float *result) const override;
+	virtual float getCost(const float *result) const override;
 protected:
 	static float _sigma_deriv(float a);
 	virtual void _updateError() override;
-	virtual void _setDesiredOutput(float *result) override;
+	virtual void _setDesiredOutput(const float *result) override;
 };

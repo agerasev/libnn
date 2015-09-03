@@ -16,10 +16,10 @@ public:
 	virtual const Layer::Buffer &getOutputError() const = 0;
 	
 	void updateError();
-	void setDesiredOutput(float *result);
-	virtual float getCost(float *result) const = 0;
+	void setDesiredOutput(const float *result);
+	virtual float getCost(const float *result) const = 0;
 	
 protected:
 	virtual void _updateError() = 0;
-	virtual void _setDesiredOutput(float *result) = 0;
+	virtual void _setDesiredOutput(const float *result) = 0;
 };

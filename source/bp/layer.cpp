@@ -14,7 +14,7 @@ void Layer_BP::updateError()
 	}
 }
 
-void Layer_BP::setDesiredOutput(float *result)
+void Layer_BP::setDesiredOutput(const float *result)
 {
 	_setDesiredOutput(result);
 	getOutputError().validate(true);

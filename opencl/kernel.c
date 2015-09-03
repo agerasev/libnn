@@ -95,7 +95,7 @@ kernel void backpropWeightGrad(
 
 kernel void backpropBiasGrad(
     const uint size, global const float *src_input_error,
-    global const float *bias_grad
+    global float *bias_grad
     )
 {
 	const uint pos = get_global_id(0);
@@ -108,19 +108,36 @@ kernel void backpropBiasGrad(
 kernel void backpropError(
     const uint in_size, const uint out_size, 
     global const float *src_error, global float *dst_error,
-    global const float *weight, global const float *bias
+    global const float *weight
     )
 {
-	const uint size = out_size;
+	const uint pos = get_global_id(0);
+	if(pos < in_size)
+	{
+		float sum = 0.0;
+		for(int i = 0; i < out_size; ++i)
+		{
+			// TODO: fence to optimize caching
+			sum += weight[i*in_size + pos]*src_error[i];
+		}
+		dst_error[pos] += sum;
+	}
+}
+
+kernel void commitWeightGrad(const uint2 size, const float delta, global const float *weight_grad, global float *weight)
+{
+	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
+	if(pos.x < size.x && pos.y < size.y)
+	{
+		weight[pos.y*size.x + pos.x] += delta*weight_grad[pos.y*size.x + pos.x];
+	}
+}
+
+kernel void commitBiasGrad(const uint size, const float delta, global const float *bias_grad, global float *bias)
+{
 	const uint pos = get_global_id(0);
 	if(pos < size)
 	{
-		int i;
-		float sum = 0.0;
-		for(i = 0; i < in_size; ++i)
-		{
-			sum += input[i]*weight[in_size*pos + i];
-		}
-		output[pos] += sum + bias[pos];
+		bias[pos] += delta*bias_grad[pos];
 	}
 }

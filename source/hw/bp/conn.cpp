@@ -2,6 +2,8 @@
 #include <nn/hw/bp/layer.hpp>
 #include <nn/exception.hpp>
 
+#include <nn/hw/utility.hpp>
+
 ConnHW_BP::ConnHW_BP() 
   : ConnHW_BP(getID(), getInputSize(), getOutputSize(), static_cast<const KitHW *>(this))
 {
@@ -10,7 +12,7 @@ ConnHW_BP::ConnHW_BP()
 
 ConnHW_BP::ConnHW_BP(ID id, int input_size, int output_size, const KitHW *kit)
     : Conn(id, input_size, output_size), KitHW(kit), 
-      _weight_grad(input_size*output_size), _bias_grad(output_size)
+      _weight_grad(input_size*output_size, kit), _bias_grad(output_size, kit)
 {
 	
 }
@@ -37,21 +39,15 @@ const ConnHW::BufferHW &ConnHW_BP::getBiasGrad() const
 
 void ConnHW_BP::_commitGrad(float delta)
 {
-	float *weight = getWeight().getData();
-	float *bias = getBias().getData();
-	const float *weight_grad = getWeightGrad().getData();
-	const float *bias_grad = getBiasGrad().getData();
-	const int weight_size = getWeight().getSize();
-	const int bias_size = getBias().getSize();
 	const float norm = delta/getBPCount();
-	for(int i = 0; i < weight_size; ++i)
-	{
-		weight[i] += weight_grad[i]*norm;
-	}
-	for(int i = 0; i < bias_size; ++i)
-	{
-		bias[i] += bias_grad[i]*norm;
-	}
+	getKernel("commitWeightGrad")->evaluate(
+	      cl::work_range(getInputSize(), getOutputSize()), ivec2(getInputSize(), getOutputSize()),
+	      norm, getWeightGrad().getBuffer(), getWeight().getBuffer()
+	      );
+	getKernel("commitBiasGrad")->evaluate(
+	      cl::work_range(getOutputSize()), getOutputSize(), norm,
+	      getBiasGrad().getBuffer(), getBias().getBuffer()
+	      );
 	getWeightGrad().clear();
 	getBiasGrad().clear();
 }
@@ -66,24 +62,15 @@ void ConnHW_BP::_backprop(const Layer *to, const Layer_BP *from)
 	if(from_sw == nullptr)
 		throw Exception("input layer is not derived from LayerHW_BP");
 	
-	const float *input_error = from_sw->getInputError().getData();
-	int sx = getInputSize(), sy = getOutputSize();
+	getKernel("backpropBiasGrad")->evaluate(
+	      cl::work_range(getOutputSize()), getOutputSize(),
+	      from_sw->getInputError().getBuffer(), getBiasGrad().getBuffer()
+	      );
 	
-	float *weight_grad = getWeightGrad().getData();
-	float *bias_grad = getBiasGrad().getData();
-	for(int i = 0; i < sy; ++i)
-	{
-		bias_grad[i] = input_error[i];
-	}
-	
-	const float *output = to_sw->getOutput().getData();
-	for(int iy = 0; iy < sy; ++iy)
-	{
-		for(int ix = 0; ix < sx; ++ix)
-		{
-			weight_grad[iy*sx + ix] += output[ix]*input_error[iy];
-		}
-	}
+	getKernel("backpropBiasGrad")->evaluate(
+	      cl::work_range(getInputSize(), getOutputSize()), ivec2(getInputSize(), getOutputSize()),
+	      from_sw->getInputError().getBuffer(), to_sw->getOutput().getBuffer(), getWeightGrad().getBuffer()
+	      );
 }
 
 void ConnHW_BP::_backprop(Layer_BP *to, const Layer_BP *from)
@@ -96,18 +83,11 @@ void ConnHW_BP::_backprop(Layer_BP *to, const Layer_BP *from)
 	if(from_sw == nullptr)
 		throw Exception("input layer is not derived from LayerHW_BP");
 	
-	float *output_error = to_sw->getOutputError().getData();
-	const float *input_error = from_sw->getInputError().getData();
-	const float *weight = getWeight().getData();
-	int sx = getInputSize(), sy = getOutputSize();
-	for(int ix = 0; ix < sx; ++ix)
-	{
-		for(int iy = 0; iy < sy; ++iy)
-		{
-			// TODO: fence in opencl to optimize cache
-			output_error[ix] += weight[iy*sx + ix]*input_error[iy];
-		}
-	}
+	getKernel("backpropError")->evaluate(
+	      cl::work_range(getInputSize()), getInputSize(), getOutputSize(),
+	      from_sw->getInputError().getBuffer(), to_sw->getOutputError().getBuffer(),
+	      getWeight().getBuffer()
+	      );
 	
 	_backprop(static_cast<const Layer *>(to), from);
 }

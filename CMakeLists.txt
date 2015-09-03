@@ -39,6 +39,10 @@ if(OPENCL_FOUND)
 		source/hw/layerext.cpp
 		source/hw/conn.cpp
 		source/hw/factory.cpp
+		source/hw/bp/factory.cpp
+		source/hw/bp/layer.cpp
+		source/hw/bp/layerext.cpp
+		source/hw/bp/conn.cpp
 	)
 endif(OPENCL_FOUND)
 
