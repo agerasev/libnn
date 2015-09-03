@@ -16,8 +16,8 @@ class KitHW
 {
 private:
 	cl::context *_context;
-	cl::queue *_queue;
 	const cl::kernel_map *_kernels;
+	cl::queue *_queue;
 	
 public:
 	KitHW(cl::context *context, const cl::kernel_map *kernels, cl::queue *queue = nullptr);

@@ -7,7 +7,7 @@ KitHW::KitHW(cl::context *context, const cl::kernel_map *kernels, cl::queue *que
 }
 
 KitHW::KitHW(const KitHW &kit)
-    : _context(kit._context), _queue(kit._queue), _kernels(kit._kernels)
+    : _context(kit._context), _kernels(kit._kernels), _queue(kit._queue)
 {
 	_bindQueue(_queue);
 }

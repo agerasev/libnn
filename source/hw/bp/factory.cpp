@@ -22,7 +22,7 @@ LayerHW_BP *FactoryHW_BP::newLayer(Layer::ID id, int size, int extension)
 		layer = new LayerExtHW_BP<LayerFunc::SIGMOID>(id, size, &kit);
 	}
 	else
-	if(extension == LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY)
+	if(extension == (LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY))
 	{
 		layer = new LayerExtHW_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY>(id, size, &kit);
 	}
