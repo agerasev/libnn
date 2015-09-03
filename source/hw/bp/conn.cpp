@@ -69,7 +69,7 @@ void ConnHW_BP::_backprop(const Layer *to, const Layer_BP *from)
 	      from_sw->getInputError().getBuffer(), getBiasGrad().getBuffer()
 	      );
 	
-	getKernel("backpropBiasGrad")->evaluate(
+	getKernel("backpropWeightGrad")->evaluate(
 	      cl::work_range(getInputSize(), getOutputSize()), ivec2(getInputSize(), getOutputSize()),
 	      from_sw->getInputError().getBuffer(), to_sw->getOutput().getBuffer(), getWeightGrad().getBuffer()
 	      );
