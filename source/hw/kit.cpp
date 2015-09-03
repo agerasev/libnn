@@ -1,7 +1,7 @@
 #include <nn/hw/kit.hpp>
 
-KitHW::KitHW(cl::context *context, const cl::kernel_map *kernels)
-    : _context(context), _kernels(kernels)
+KitHW::KitHW(cl::context *context, const cl::kernel_map *kernels, cl::queue *queue)
+    : _context(context), _kernels(kernels), _queue(queue)
 {
 	
 }

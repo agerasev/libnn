@@ -22,7 +22,11 @@ private:
 	}
 	
 public:
-	vec() = default;
+	vec()
+	{
+		
+	}
+
 	template <typename ... Args>
 	vec(Args ... args)
 	{

@@ -16,7 +16,8 @@ ConnHW_BP::ConnHW_BP(ID id, int input_size, int output_size, const KitHW *kit)
     : Conn(id, input_size, output_size), KitHW(kit), 
       _weight_grad(input_size*output_size, kit), _bias_grad(output_size, kit)
 {
-	
+	getWeightGrad().clear();
+	getBiasGrad().clear();
 }
 
 ConnHW::BufferHW &ConnHW_BP::getWeightGrad()

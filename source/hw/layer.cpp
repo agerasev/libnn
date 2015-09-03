@@ -40,7 +40,7 @@ const LayerHW::BufferHW &LayerHW::getOutput() const
 void LayerHW::_update()
 {
 	cl::work_range range(getSize());
-	getKernel("update_uniform")->evaluate(range, getSize(), _input.getBuffer(), _output.getBuffer());
+	getKernel("update")->evaluate(range, getSize(), _input.getBuffer(), _output.getBuffer());
 }
 
 void LayerHW::_bindQueue(cl::queue *queue)

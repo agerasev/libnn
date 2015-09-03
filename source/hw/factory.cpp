@@ -17,7 +17,7 @@ FactoryHW::~FactoryHW()
 LayerHW *FactoryHW::newLayer(Layer::ID id, int size, int extension)
 {
 	LayerHW *layer;
-	KitHW kit(&session->get_context(), &program->get_kernel_map());
+	KitHW kit(&session->get_context(), &program->get_kernel_map(), &session->get_queue());
 	if(extension == LayerFunc::UNIFORM)
 	{
 		layer = new LayerHW(id, size, &kit);
@@ -31,14 +31,14 @@ LayerHW *FactoryHW::newLayer(Layer::ID id, int size, int extension)
 	{
 		throw Exception("there is no such layer extension code: " + std::to_string(extension));
 	}
-	layer->bindQueue(&session->get_queue());
+	// layer->bindQueue(&session->get_queue());
 	return layer;
 }
 
 ConnHW *FactoryHW::newConn(Conn::ID id, int input_size, int output_size)
 {
-	KitHW kit(&session->get_context(), &program->get_kernel_map());
+	KitHW kit(&session->get_context(), &program->get_kernel_map(), &session->get_queue());
 	ConnHW *connection = new ConnHW(id, input_size, output_size, &kit);
-	connection->bindQueue(&session->get_queue());
+	// connection->bindQueue(&session->get_queue());
 	return connection;
 }

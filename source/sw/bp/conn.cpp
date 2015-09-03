@@ -5,7 +5,8 @@
 ConnSW_BP::ConnSW_BP(ID id, int input_size, int output_size)
     : Conn(id, input_size, output_size), _weight_grad(input_size*output_size), _bias_grad(output_size)
 {
-	
+	getWeightGrad().clear();
+	getBiasGrad().clear();
 }
 
 ConnSW::BufferSW &ConnSW_BP::getWeightGrad()

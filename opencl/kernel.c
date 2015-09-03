@@ -2,6 +2,24 @@
 #include "opencl.h"
 #endif // __OPENCL_VERSION__
 
+kernel void fill(const uint size, global float *buffer, const float number)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		buffer[pos] = number;
+	}
+}
+
+kernel void copy(const uint size, global const float *src, global float *dst)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		dst[pos] = src[pos];
+	}
+}
+
 kernel void transmit(
     const uint in_size, const uint out_size, 
     global const float *input, global float *output,
@@ -22,16 +40,7 @@ kernel void transmit(
 	}
 }
 
-kernel void fill(const uint size, global float *buffer, const float number)
-{
-	const uint pos = get_global_id(0);
-	if(pos < size)
-	{
-		buffer[pos] = number;
-	}
-}
-
-kernel void update_uniform(const uint size, global const float *input, global float *output)
+kernel void update(const uint size, global const float *input, global float *output)
 {
 	const uint pos = get_global_id(0);
 	if(pos < size)
@@ -42,7 +51,14 @@ kernel void update_uniform(const uint size, global const float *input, global fl
 
 float sigma(float a)
 {
-	return 1.0f/(1.0f + exp(-a));
+	return 1.0/(1.0 + exp(-a));
+}
+
+float sigma_deriv(float a)
+{
+	float e = exp(a);
+	float d = (1.0 + e);
+	return e/(d*d);
 }
 
 kernel void update_sigmoid(const uint size, global const float *input, global float *output)
@@ -54,7 +70,7 @@ kernel void update_sigmoid(const uint size, global const float *input, global fl
 	}
 }
 
-kernel void setError_quartic(const uint size, global const float *result, global const float *output, global float *error)
+kernel void setError(const uint size, global const float *result, global const float *output, global float *error)
 {
 	const uint pos = get_global_id(0);
 	if(pos < size)
@@ -63,7 +79,7 @@ kernel void setError_quartic(const uint size, global const float *result, global
 	}
 }
 
-kernel void setErrorC_quartic(const uint size, global const float *output, global float *error)
+kernel void setErrorC(const uint size, global const float *output, global float *error)
 {
 	const uint pos = get_global_id(0);
 	if(pos < size)
@@ -72,12 +88,30 @@ kernel void setErrorC_quartic(const uint size, global const float *output, globa
 	}
 }
 
-kernel void updateError_uniform(const uint size, global float *input_error, global const float *output_error)
+kernel void updateError(const uint size, global float *input_error, global const float *output_error)
 {
 	const uint pos = get_global_id(0);
 	if(pos < size)
 	{
 		input_error[pos] = output_error[pos];
+	}
+}
+
+kernel void updateError_sigmoid(const uint size, global float *input_error, global const float *output_error, global const float *input)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		input_error[pos] = output_error[pos]*sigma_deriv(input[pos]);
+	}
+}
+
+kernel void updateError_sigmoid_crossEntropy(const uint size, global float *input_error, global const float *output_error, global const float *input, global const float *output)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		input_error[pos] = output_error[pos]*output[pos]*(1.0 - output[pos]);
 	}
 }
 

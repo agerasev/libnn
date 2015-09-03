@@ -17,7 +17,7 @@ float LayerExtSW_BP<LayerFunc::SIGMOID>::_sigma_deriv(float a)
 	return ::_sigma_deriv(a);
 }
 
-float LayerExtSW_BP< LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY >::_sigma_deriv(float a)
+float LayerExtSW_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY>::_sigma_deriv(float a)
 {
 	return ::_sigma_deriv(a);
 }
@@ -77,7 +77,7 @@ void LayerExtSW_BP< LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY >::_setDesired
 
 #else // NN_NO_OPTIM
 
-void LayerExtSW_BP< LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY >::_updateError()
+void LayerExtSW_BP< LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY >::_updateError()
 {
 	const int size = getSize();
 	float *input_error = getInputError().getData();

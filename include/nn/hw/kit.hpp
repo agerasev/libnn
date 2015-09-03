@@ -16,11 +16,11 @@ class KitHW
 {
 private:
 	cl::context *_context;
-	cl::queue *_queue = nullptr;
+	cl::queue *_queue;
 	const cl::kernel_map *_kernels;
 	
 public:
-	KitHW(cl::context *context, const cl::kernel_map *kernels);
+	KitHW(cl::context *context, const cl::kernel_map *kernels, cl::queue *queue = nullptr);
 	KitHW(const KitHW &kit);
 	KitHW(const KitHW *kit);
 	

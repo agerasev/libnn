@@ -35,7 +35,7 @@ void LayerHW_BP::setDesiredOutput(const cl::buffer_object *result)
 void LayerHW_BP::_setDesiredOutput(const float *result)
 {
 	getOutputError().getBuffer()->store_data(result);
-	getKernel("setErrorC_quartic")->evaluate(
+	getKernel("setErrorC")->evaluate(
 	      cl::work_range(getSize()), getSize(), 
 	      getOutput().getBuffer(), getOutputError().getBuffer()
 	      );
@@ -43,7 +43,7 @@ void LayerHW_BP::_setDesiredOutput(const float *result)
 
 void LayerHW_BP::_setDesiredOutput(const cl::buffer_object *result)
 {
-	getKernel("setError_quartic")->evaluate(
+	getKernel("setError")->evaluate(
 	      cl::work_range(getSize()), getSize(), 
 	      result, getOutput().getBuffer(), getOutputError().getBuffer()
 	      );
@@ -67,7 +67,7 @@ float LayerHW_BP::getCost(const float *result) const
 
 void LayerHW_BP::_updateError()
 {
-	getKernel("updateError_uniform")->evaluate(
+	getKernel("updateError")->evaluate(
 	      cl::work_range(getSize()), getSize(),
 	      getInputError().getBuffer(), getOutputError().getBuffer()
 	      );

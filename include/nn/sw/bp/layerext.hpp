@@ -40,10 +40,10 @@ protected:
 };
 
 template <>
-class LayerExtSW_BP<LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY> : 
+class LayerExtSW_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY> : 
         public virtual LayerSW_BP, 
         public virtual LayerExtSW<LayerFunc::SIGMOID>, 
-        public virtual LayerExt_BP<LayerFunc::SIGMOID | LayerCost::CROSS_ENTROPY>
+        public virtual LayerExt_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY>
 {
 private:
 	bool desired = false;

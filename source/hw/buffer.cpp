@@ -9,7 +9,7 @@ BufferHW::BufferHW()
 BufferHW::BufferHW(int size, const KitHW *kit)
     : Buffer(size), KitHW(kit), _buffer(*kit->getContext(), size*sizeof(float))
 {
-	
+	_buffer.bind_queue(getQueue()->get_cl_command_queue());
 }
 
 BufferHW::~BufferHW()
@@ -29,8 +29,7 @@ void BufferHW::write(const float *data)
 
 void BufferHW::clear()
 {
-	cl::work_range range(getSize());
-	getKernel("fill")->evaluate(range, getSize(), getBuffer(), 0.0f);
+	getKernel("fill")->evaluate(cl::work_range(getSize()), getSize(), getBuffer(), 0.0f);
 }
 
 cl::buffer_object *BufferHW::getBuffer()
