@@ -14,7 +14,10 @@ ConnHW::ConnHW(ID id, int input_size, int output_size, int weight_size, int bias
 }
 
 ConnHW::ConnHW()
-    : ConnHW(getID(), getInputSize(), getOutputSize(), getWeight().getSize(), getBias().getSize(), this)
+    : ConnHW(
+        getID(), getInputSize(), getOutputSize(),
+        static_cast<const KitHW *>(this)
+        )
 {
 	
 }

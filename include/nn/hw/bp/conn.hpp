@@ -11,7 +11,7 @@ private:
 	
 	// TODO: add weight_size and bias_size to ctor
 protected:
-	ConnHW_BP();
+	// ConnHW_BP();
 public:
 	ConnHW_BP(ID id, int input_size, int output_size, const KitHW *kit);
 	virtual ~ConnHW_BP() = default;
@@ -25,4 +25,5 @@ protected:
 	virtual void _commitGrad(float delta) override;
 	virtual void _backprop(const Layer *to, const Layer_BP *from) override;
 	virtual void _backprop(Layer_BP *to, const Layer_BP *from) override;
+	virtual void _bindQueue(cl::queue *queue) override;
 };

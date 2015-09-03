@@ -4,11 +4,13 @@
 
 #include <nn/hw/utility.hpp>
 
+/*
 ConnHW_BP::ConnHW_BP() 
   : ConnHW_BP(getID(), getInputSize(), getOutputSize(), static_cast<const KitHW *>(this))
 {
 	
 }
+*/
 
 ConnHW_BP::ConnHW_BP(ID id, int input_size, int output_size, const KitHW *kit)
     : Conn(id, input_size, output_size), KitHW(kit), 
@@ -92,3 +94,9 @@ void ConnHW_BP::_backprop(Layer_BP *to, const Layer_BP *from)
 	_backprop(static_cast<const Layer *>(to), from);
 }
 
+void ConnHW_BP::_bindQueue(cl::queue *queue)
+{
+	getWeightGrad().bindQueue(queue);
+	getBiasGrad().bindQueue(queue);
+	ConnHW::_bindQueue(queue);
+}

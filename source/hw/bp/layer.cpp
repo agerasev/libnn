@@ -72,3 +72,10 @@ void LayerHW_BP::_updateError()
 	      getInputError().getBuffer(), getOutputError().getBuffer()
 	      );
 }
+
+void LayerHW_BP::_bindQueue(cl::queue *queue)
+{
+	getInputError().bindQueue(queue);
+	getOutputError().bindQueue(queue);
+	LayerHW::_bindQueue(queue);
+}

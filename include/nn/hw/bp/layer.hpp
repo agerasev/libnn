@@ -27,4 +27,5 @@ protected:
 	virtual void _updateError() override;
 	virtual void _setDesiredOutput(const float *result) override;
 	virtual void _setDesiredOutput(const cl::buffer_object *result);
+	virtual void _bindQueue(cl::queue *queue) override;
 };
