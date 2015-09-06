@@ -2,6 +2,17 @@
 #include "opencl.h"
 #endif // __OPENCL_VERSION__
 
+void atomic_add_f(volatile global float *p, const float val) {
+	union {
+	    unsigned int i;
+	    float f;
+	} next, prev;
+	do {
+		prev.f = *p;
+		next.f = prev.f + val;
+	} while (atomic_cmpxchg((volatile global uint *)p, prev.i, next.i) != prev.i);
+}
+
 kernel void fill(const uint size, global float *buffer, const float number)
 {
 	const uint pos = get_global_id(0);
@@ -26,17 +37,38 @@ kernel void transmit(
     global const float *weight, global const float *bias
     )
 {
-	const uint size = out_size;
 	const uint pos = get_global_id(0);
-	if(pos < size)
+	if(pos < out_size)
 	{
-		int i;
 		float sum = 0.0;
-		for(i = 0; i < in_size; ++i)
+		for(int i = 0; i < in_size; ++i)
 		{
 			sum += input[i]*weight[in_size*pos + i];
 		}
 		output[pos] += sum + bias[pos];
+	}
+}
+
+kernel void transmitSplit(
+    const uint in_size, const uint out_size, const uint line,
+    global const float *input, global float *output,
+    global const float *weight, global const float *bias
+    )
+{
+	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
+	const uint line_count = (in_size - 1)/line + 1;
+	if(pos.y < out_size && pos.x < line_count)
+	{
+		float sum = 0.0;
+		for(int i = pos.x*line; i < (pos.x + 1)*line && i < in_size; ++i)
+		{
+			sum += input[i]*weight[in_size*pos.y + i];
+		}
+		if(!pos.x)
+		{
+			sum += bias[pos.y];
+		}
+		atomic_add_f(output + pos.y, sum);
 	}
 }
 
@@ -79,7 +111,7 @@ kernel void setError(const uint size, global const float *result, global const f
 	}
 }
 
-kernel void setErrorC(const uint size, global const float *output, global float *error)
+kernel void setErrorReuse(const uint size, global const float *output, global float *error)
 {
 	const uint pos = get_global_id(0);
 	if(pos < size)

@@ -42,3 +42,23 @@ ConnHW *FactoryHW::newConn(Conn::ID id, int input_size, int output_size)
 	// connection->bindQueue(&session->get_queue());
 	return connection;
 }
+
+cl::session *FactoryHW::getSession()
+{
+	return session;
+}
+
+cl::program *FactoryHW::getProgram()
+{
+	return program;
+}
+
+const cl::session *FactoryHW::getSession() const
+{
+	return session;
+}
+
+const cl::program *FactoryHW::getProgram() const
+{
+	return program;
+}

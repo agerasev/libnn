@@ -35,7 +35,7 @@ void LayerHW_BP::setDesiredOutput(const cl::buffer_object *result)
 void LayerHW_BP::_setDesiredOutput(const float *result)
 {
 	getOutputError().getBuffer()->store_data(result);
-	getKernel("setErrorC")->evaluate(
+	getKernel("setErrorReuse")->evaluate(
 	      cl::work_range(getSize()), getSize(), 
 	      getOutput().getBuffer(), getOutputError().getBuffer()
 	      );

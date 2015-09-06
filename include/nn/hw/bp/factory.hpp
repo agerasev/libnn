@@ -8,7 +8,7 @@
 class FactoryHW_BP : public FactoryHW
 {
 public:
-	FactoryHW_BP(const std::string &kernel_file);
+	FactoryHW_BP(const std::string &kernel_file = std::string("libnn/opencl/kernel.c"));
 	virtual ~FactoryHW_BP() = default;
 	
 	virtual LayerHW_BP *newLayer(Layer::ID id, int size, int extension = LayerFunc::UNIFORM) override;
