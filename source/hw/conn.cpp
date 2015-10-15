@@ -1,6 +1,7 @@
 #include <nn/hw/conn.hpp>
 
 #include <nn/exception.hpp>
+#include <la/vec.hpp>
 
 #include <cstdlib>
 

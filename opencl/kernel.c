@@ -20,6 +20,15 @@ kernel void copy(const uint size, global const float *src, global float *dst)
 	}
 }
 
+kernel void add(const uint size, global const float *src, global float *dst)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		dst[pos] += src[pos];
+	}
+}
+
 kernel void transmit(
     const uint in_size, const uint out_size, 
     global const float *input, global float *output,
