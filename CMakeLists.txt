@@ -9,6 +9,7 @@ elseif (MSVC)
 endif()
 
 include_directories(include)
+include_directories(libla)
 
 set(SOURCE 
 	source/buffer.cpp
@@ -28,9 +29,8 @@ set(SOURCE
 	source/sw/bp/layerext.cpp
 )
 
-find_package(OpenCL)
-if(OPENCL_FOUND)
-	include_directories(${OPENCL_INCLUDE_DIRS} libcl4u/include)
+if(OPENCL)
+	include_directories(libcl4u/include)
 	set(SOURCE
 		${SOURCE}
 		source/hw/kit.cpp
@@ -44,11 +44,11 @@ if(OPENCL_FOUND)
 		source/hw/bp/layerext.cpp
 		source/hw/bp/conn.cpp
 	)
-endif(OPENCL_FOUND)
+endif(OPENCL)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
 
-if(OPENCL_FOUND)
-add_subdirectory(libcl4u)
-target_link_libraries(${PROJECT_NAME} cl4u)
-endif(OPENCL_FOUND)
+if(OPENCL)
+	add_subdirectory(libcl4u)
+	target_link_libraries(${PROJECT_NAME} cl4u)
+endif(OPENCL)

@@ -2,17 +2,6 @@
 #include "opencl.h"
 #endif // __OPENCL_VERSION__
 
-void atomic_add_f(volatile global float *p, const float val) {
-	union {
-	    unsigned int i;
-	    float f;
-	} next, prev;
-	do {
-		prev.f = *p;
-		next.f = prev.f + val;
-	} while (atomic_cmpxchg((volatile global uint *)p, prev.i, next.i) != prev.i);
-}
-
 kernel void fill(const uint size, global float *buffer, const float number)
 {
 	const uint pos = get_global_id(0);
@@ -28,6 +17,15 @@ kernel void copy(const uint size, global const float *src, global float *dst)
 	if(pos < size)
 	{
 		dst[pos] = src[pos];
+	}
+}
+
+kernel void add(const uint size, global const float *src, global float *dst)
+{
+	const uint pos = get_global_id(0);
+	if(pos < size)
+	{
+		dst[pos] += src[pos];
 	}
 }
 
@@ -49,26 +47,58 @@ kernel void transmit(
 	}
 }
 
-kernel void transmitSplit(
-    const uint in_size, const uint out_size, const uint line,
+kernel void transmit_reduce_init(
+    const uint in_size, const uint2 out_size,
     global const float *input, global float *output,
-    global const float *weight, global const float *bias
+    global const float *weight
     )
 {
 	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
-	const uint line_count = (in_size - 1)/line + 1;
-	if(pos.y < out_size && pos.x < line_count)
+	const line = (in_size - 1)/out_size.x + 1;
+	if(pos.y < out_size.y && pos.x < out_size.x)
 	{
 		float sum = 0.0;
-		for(int i = pos.x*line; i < (pos.x + 1)*line && i < in_size; ++i)
+		for(int i = pos.x*line; i < min((pos.x + 1)*line, in_size); ++i)
 		{
 			sum += input[i]*weight[in_size*pos.y + i];
 		}
-		if(!pos.x)
+		output[out_size.x*pos.y + pos.x] = sum;
+	}
+}
+
+kernel void transmit_reduce(
+    const uint in_size, const uint2 out_size,
+    global const float *input, global float *output
+    )
+{
+	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
+	const line = (in_size - 1)/out_size.x + 1;
+	if(pos.y < out_size.y && pos.x < out_size.x)
+	{
+		float sum = 0.0;
+		for(int i = pos.x*line; i < min((pos.x + 1)*line, in_size); ++i)
 		{
-			sum += bias[pos.y];
+			sum += input[in_size*pos.y + i];
 		}
-		atomic_add_f(output + pos.y, sum);
+		output[out_size.x*pos.y + pos.x] = sum;
+	}
+}
+
+kernel void transmit_reduce_finalize(
+    const uint in_size, const uint out_size, 
+    global const float *input, global float *output,
+    global const float *bias
+    )
+{
+	const uint pos = get_global_id(0);
+	if(pos < out_size)
+	{
+		float sum = 0.0;
+		for(int i = 0; i < in_size; ++i)
+		{
+			sum += input[in_size*pos + i];
+		}
+		output[pos] += sum + bias[pos];
 	}
 }
 

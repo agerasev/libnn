@@ -2,7 +2,7 @@
 #include <nn/hw/bp/layer.hpp>
 #include <nn/exception.hpp>
 
-#include <nn/hw/utility.hpp>
+#include <la/vec.hpp>
 
 /*
 ConnHW_BP::ConnHW_BP() 

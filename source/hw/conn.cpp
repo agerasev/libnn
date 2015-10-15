@@ -1,6 +1,7 @@
 #include <nn/hw/conn.hpp>
 
 #include <nn/exception.hpp>
+#include <la/vec.hpp>
 
 #include <cstdlib>
 
@@ -64,21 +65,11 @@ void ConnHW::_transmit(const Layer *from, Layer *to) const
 	if(output == nullptr)
 		throw Exception("output layer is not derived from LayerHW");
 	
-#ifndef NN_NO_OPTIM
-	int line = 0x100;
-	int size_x = (getInputSize() - 1)/line + 1;
-	getKernel("transmitSplit")->evaluate(
-				cl::work_range(size_x, getOutputSize()), getInputSize(), getOutputSize(), line,
-				input->getOutput().getBuffer(), output->getInput().getBuffer(), 
-				_weight.getBuffer(), _bias.getBuffer()
-				);
-#else // NN_NO_OPTIM
 	getKernel("transmit")->evaluate(
 				cl::work_range(getOutputSize()), getInputSize(), getOutputSize(),
 				input->getOutput().getBuffer(), output->getInput().getBuffer(), 
 				_weight.getBuffer(), _bias.getBuffer()
 				);
-#endif // NN_NO_OPTIM
 }
 
 void ConnHW::_bindQueue(cl::queue *queue)
