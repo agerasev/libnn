@@ -5,6 +5,10 @@
 #include <nn/hw/buffer.hpp>
 #include <nn/hw/kit.hpp>
 
+#ifndef NN_NO_OPTIM
+#include <vector>
+#endif
+
 class ConnHW : 
         public virtual Conn,
         public virtual KitHW
@@ -26,6 +30,11 @@ public:
 private:
 	BufferHW _weight;
 	BufferHW _bias;
+	
+#ifndef NN_NO_OPTIM
+	static const int REDUCE_FACTOR = 0x8;
+	std::vector<BufferHW *> _reduce_buffers;
+#endif
 	
 protected:
 	ConnHW(ID id, int input_size, int output_size, int weight_size, int bias_size, const KitHW *kit);

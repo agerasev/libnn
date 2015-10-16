@@ -47,6 +47,61 @@ kernel void transmit(
 	}
 }
 
+kernel void transmit_reduce_init(
+    const uint in_size, const uint2 out_size,
+    global const float *input, global float *output,
+    global const float *weight
+    )
+{
+	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
+	const line = (in_size - 1)/out_size.x + 1;
+	if(pos.y < out_size.y && pos.x < out_size.x)
+	{
+		float sum = 0.0;
+		for(int i = pos.x*line; i < min((pos.x + 1)*line, in_size); ++i)
+		{
+			sum += input[i]*weight[in_size*pos.y + i];
+		}
+		output[out_size.x*pos.y + pos.x] = sum;
+	}
+}
+
+kernel void transmit_reduce(
+    const uint in_size, const uint2 out_size,
+    global const float *input, global float *output
+    )
+{
+	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
+	const line = (in_size - 1)/out_size.x + 1;
+	if(pos.y < out_size.y && pos.x < out_size.x)
+	{
+		float sum = 0.0;
+		for(int i = pos.x*line; i < min((pos.x + 1)*line, in_size); ++i)
+		{
+			sum += input[in_size*pos.y + i];
+		}
+		output[out_size.x*pos.y + pos.x] = sum;
+	}
+}
+
+kernel void transmit_reduce_finalize(
+    const uint in_size, const uint out_size, 
+    global const float *input, global float *output,
+    global const float *bias
+    )
+{
+	const uint pos = get_global_id(0);
+	if(pos < out_size)
+	{
+		float sum = 0.0;
+		for(int i = 0; i < in_size; ++i)
+		{
+			sum += input[in_size*pos + i];
+		}
+		output[pos] += sum + bias[pos];
+	}
+}
+
 kernel void update(const uint size, global const float *input, global float *output)
 {
 	const uint pos = get_global_id(0);
