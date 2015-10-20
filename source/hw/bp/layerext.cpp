@@ -53,7 +53,7 @@ void LayerExtHW_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY>::_updateError()
 void LayerExtHW_BP<LayerFunc::SIGMOID|LayerCost::CROSS_ENTROPY>::_setDesiredOutput(const float *result)
 {
 	getOutputError().getBuffer()->store_data(result);
-	getKernel("setErrorC")->evaluate(
+	getKernel("setErrorReuse")->evaluate(
 		cl::work_range(getSize()), getSize(),
 		getOutput().getBuffer(), getOutputError().getBuffer()
 		);

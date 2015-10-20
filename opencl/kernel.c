@@ -72,7 +72,7 @@ kernel void transmit_reduce(
     )
 {
 	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
-	const line = (in_size - 1)/out_size.x + 1;
+	const uint line = (in_size - 1)/out_size.x + 1;
 	if(pos.y < out_size.y && pos.x < out_size.x)
 	{
 		float sum = 0.0;
@@ -178,14 +178,16 @@ kernel void updateError_sigmoid_crossEntropy(const uint size, global float *inpu
 }
 
 kernel void backpropWeightGrad(
-    const uint2 size, global const float *src_input_error, global const float *dst_output,
+    const uint2 size2, global const float *src_input_error, global const float *dst_output,
     global float *weight_grad
     )
 {
-	const uint2 pos = (uint2) (get_global_id(0), get_global_id(1));
-	if(pos.x < size.x && pos.y < size.y)
+	const uint pos = get_global_id(0);
+	const uint size = size2.x*size2.y;
+	const uint2 pos2 = (uint2) (pos % size2.x, pos / size2.x);
+	if(pos < size)
 	{
-		weight_grad[pos.y*size.x + pos.x] += dst_output[pos.x]*src_input_error[pos.y];
+		weight_grad[pos] += dst_output[pos2.x]*src_input_error[pos2.y];
 	}
 }
 
